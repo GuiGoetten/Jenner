@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jenner.Vacinar.API", "Jenne
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jenner.Vacinar.Worker", "Jenner.Vacinar.Worker\Jenner.Vacinar.Worker.csproj", "{852F06FC-4AA6-4AAF-B001-D195852AFDE2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jenner.Consultar.API", "Jenner.Consultar.API\Jenner.Consultar.API.csproj", "{F682F476-4FB5-4B8A-9EF8-D1DD029B1FF9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{852F06FC-4AA6-4AAF-B001-D195852AFDE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{852F06FC-4AA6-4AAF-B001-D195852AFDE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{852F06FC-4AA6-4AAF-B001-D195852AFDE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F682F476-4FB5-4B8A-9EF8-D1DD029B1FF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F682F476-4FB5-4B8A-9EF8-D1DD029B1FF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F682F476-4FB5-4B8A-9EF8-D1DD029B1FF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F682F476-4FB5-4B8A-9EF8-D1DD029B1FF9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
