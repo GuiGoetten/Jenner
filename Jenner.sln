@@ -5,11 +5,13 @@ VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jenner.Vacinar.API", "Jenner.Vacinar.API\Jenner.Vacinar.API.csproj", "{5399AC44-85D5-4830-B3A7-A26BDE46C3B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jenner.Vacinar.Worker", "Jenner.Vacinar.Worker\Jenner.Vacinar.Worker.csproj", "{852F06FC-4AA6-4AAF-B001-D195852AFDE2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jenner.Vacinar.Worker", "Jenner.Vacinar.Worker\Jenner.Vacinar.Worker.csproj", "{852F06FC-4AA6-4AAF-B001-D195852AFDE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jenner.Consultar.API", "Jenner.Consultar.API\Jenner.Consultar.API.csproj", "{F682F476-4FB5-4B8A-9EF8-D1DD029B1FF9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jenner.Consultar.API", "Jenner.Consultar.API\Jenner.Consultar.API.csproj", "{F682F476-4FB5-4B8A-9EF8-D1DD029B1FF9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jenner.Consultar.Worker", "Jenner.Consultar.Worker\Jenner.Consultar.Worker.csproj", "{6A275059-8708-4D15-8452-16EB84CCAB54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jenner.Consultar.Worker", "Jenner.Consultar.Worker\Jenner.Consultar.Worker.csproj", "{6A275059-8708-4D15-8452-16EB84CCAB54}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{2093F6E7-F553-419F-8788-9C43C29CC7FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{6A275059-8708-4D15-8452-16EB84CCAB54}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A275059-8708-4D15-8452-16EB84CCAB54}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A275059-8708-4D15-8452-16EB84CCAB54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2093F6E7-F553-419F-8788-9C43C29CC7FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2093F6E7-F553-419F-8788-9C43C29CC7FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2093F6E7-F553-419F-8788-9C43C29CC7FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2093F6E7-F553-419F-8788-9C43C29CC7FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
