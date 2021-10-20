@@ -1,29 +1,44 @@
+using CloudNative.CloudEvents;
+using CloudNative.CloudEvents.SystemTextJson;
+using Confluent.Kafka;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Jenner.Consultar.Worker
 {
-    public class Worker : BackgroundService
+    public abstract class Worker : BackgroundService
     {
-        private readonly ILogger<Worker> _logger;
+        protected readonly IServiceProvider serviceProvider;
+        protected readonly CloudEventFormatter cloudEventFormatter;
+        protected IConsumer<string, byte[]> KafkaConsumer { get; private set; } = null;
 
-        public Worker(ILogger<Worker> logger)
+        public Worker(
+            IServiceProvider serviceProvider,
+            CloudEventFormatter formatter = null)
         {
-            _logger = logger;
+            this.serviceProvider = serviceProvider;
+            cloudEventFormatter = formatter ?? new JsonEventFormatter();
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                await Task.Delay(1000, stoppingToken);
-            }
+            
+            KafkaConsumer = serviceProvider
+                .CreateScope().ServiceProvider
+                .GetRequiredService<IConsumer<string, byte[]>>();
+            return Task.Run(() => DoScoped(stoppingToken), stoppingToken);  // TALVEZ PRECISE MUDAR AQUI
+        }
+
+        protected abstract void DoScoped(CancellationToken cancellationToken);
+
+        public override void Dispose()
+        {
+            GC.SuppressFinalize(this);
+            KafkaConsumer?.Dispose();
+            base.Dispose();
         }
     }
 }
