@@ -1,1 +1,8 @@
 version: '3.4'
+
+services:
+  Jenner.Consultar.Worker:
+    image: ${DOCKER_REGISTRY-}jennerconsultarworker
+    build:
+      context: .
+      dockerfile: src/Jenner.Consultar.Worker/Dockerfile
