@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace Jenner.Consultar.Worker
 {
-    public abstract class Worker : BackgroundService
+    public abstract class ConsumeWorker : BackgroundService
     {
         protected readonly IServiceProvider serviceProvider;
         protected readonly CloudEventFormatter cloudEventFormatter;
         protected IConsumer<string, byte[]> KafkaConsumer { get; private set; } = null;
 
-        public Worker(
+        public ConsumeWorker(
             IServiceProvider serviceProvider,
             CloudEventFormatter formatter = null)
         {

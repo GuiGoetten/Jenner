@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jenner.Consultar.Worker", "
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{2093F6E7-F553-419F-8788-9C43C29CC7FE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jenner.Comum", "Jenner.Comum\Jenner.Comum.csproj", "{8E14796A-8931-48C5-9102-6171C8425BF3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{2093F6E7-F553-419F-8788-9C43C29CC7FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2093F6E7-F553-419F-8788-9C43C29CC7FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2093F6E7-F553-419F-8788-9C43C29CC7FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E14796A-8931-48C5-9102-6171C8425BF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E14796A-8931-48C5-9102-6171C8425BF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E14796A-8931-48C5-9102-6171C8425BF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E14796A-8931-48C5-9102-6171C8425BF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

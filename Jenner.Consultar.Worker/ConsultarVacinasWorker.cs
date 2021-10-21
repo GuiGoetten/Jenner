@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace Jenner.Consultar.Worker
 {
-    class ConsultarVacinasWorker : Worker
+    class ConsultarVacinasWorker : ConsumeWorker
     {
         private readonly ISender sender;
         private readonly IConfiguration configuration;
