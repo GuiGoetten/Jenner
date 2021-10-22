@@ -4,6 +4,7 @@ using Confluent.Kafka;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,6 +24,12 @@ namespace Jenner.Consultar.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
+            services.AddMediatR(GetType().Assembly);
+            services.Configure<ForwardedHeadersOptions>(fwh =>
+            {
+                fwh.ForwardedHeaders = ForwardedHeaders.All;
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -30,7 +37,6 @@ namespace Jenner.Consultar.API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Jenner.Consultar.API", Version = "v1" });
             });
             AddKafkaServices(services);
-            services.AddMediatR(GetType().Assembly);
         }
 
         private void AddKafkaServices(IServiceCollection services)
@@ -39,7 +45,7 @@ namespace Jenner.Consultar.API
             {
                 var config = new ProducerConfig
                 {
-                    BootstrapServers = "localhost:9092"
+                    BootstrapServers = Configuration.GetConnectionString("kafka:9092")
                 };
                 return new ProducerBuilder<string, byte[]>(config).Build();
             });
@@ -52,11 +58,17 @@ namespace Jenner.Consultar.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Jenner.Consultar.API v1"));
             }
+            app.UseForwardedHeaders();
+            
+            app.UseSwagger();
+            
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Jenner.Consultar.API v1"));
 
-            app.UseHttpsRedirection();
+            if (!Configuration.GetValue<bool>("DOTNET_RUNNING_IN_CONTAINER"))
+            {
+                app.UseHttpsRedirection();
+            }
 
             app.UseRouting();
 

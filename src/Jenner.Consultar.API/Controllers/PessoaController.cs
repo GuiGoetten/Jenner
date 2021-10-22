@@ -1,16 +1,17 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Jenner.Consultar.API.Controllers
 {
+    [ApiController]
+    [Route("api")]
     public class PessoaController : ControllerBase
     {
         private readonly ISender sender;
+
+        private CancellationToken Token => HttpContext?.RequestAborted ?? default;
 
         public PessoaController(ISender sender)
         {
@@ -19,10 +20,9 @@ namespace Jenner.Consultar.API.Controllers
 
         // POST: PessoaController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(PessoaCreate command)
+        public async Task<ActionResult> Create([FromBody] PessoaCreate pessoa)
         {
-            string result = await sender.Send(command);
+            string result = await sender.Send(pessoa);
             return Ok(result);
         }
     }

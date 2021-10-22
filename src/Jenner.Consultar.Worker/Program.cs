@@ -24,7 +24,7 @@ namespace Jenner.Consultar.Worker
                     {
                         var config = new ConsumerConfig
                         {
-                            BootstrapServers = "localhost:9092",
+                            BootstrapServers = configuration.GetConnectionString("kafka:9092"),
                             GroupId = "jenner",
                             AutoOffsetReset = AutoOffsetReset.Earliest
                         };
