@@ -45,7 +45,7 @@ namespace Jenner.Consultar.API
             {
                 var config = new ProducerConfig
                 {
-                    BootstrapServers = Configuration.GetConnectionString("kafka:9092")
+                    BootstrapServers = Configuration.GetConnectionString(@"KafkaBootstrap")
                 };
                 return new ProducerBuilder<string, byte[]>(config).Build();
             });

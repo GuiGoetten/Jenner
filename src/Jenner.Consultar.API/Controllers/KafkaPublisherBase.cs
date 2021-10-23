@@ -47,7 +47,7 @@ namespace Jenner.Consultar.API.Controllers
                                cancellationToken);
                     return result;
                 }
-                catch (Exception ex)
+                catch
                 {
                     throw;
                 }
