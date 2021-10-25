@@ -29,10 +29,10 @@ namespace Jenner.Consultar.Worker
             KafkaConsumer = serviceProvider
                 .CreateScope().ServiceProvider
                 .GetRequiredService<IConsumer<string, byte[]>>();
-            return Task.Run(() => DoScoped(stoppingToken), stoppingToken);  // TALVEZ PRECISE MUDAR AQUI
+            return Task.Run(() => DoScopedAsync(stoppingToken), stoppingToken);  // TALVEZ PRECISE MUDAR AQUI
         }
 
-        protected abstract void DoScoped(CancellationToken cancellationToken);
+        protected abstract Task DoScopedAsync(CancellationToken cancellationToken);
 
         public override void Dispose()
         {

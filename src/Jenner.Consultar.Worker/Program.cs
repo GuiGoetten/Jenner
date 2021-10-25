@@ -24,8 +24,8 @@ namespace Jenner.Consultar.Worker
                     {
                         var config = new ConsumerConfig
                         {
-                            BootstrapServers = configuration.GetConnectionString("kafka:9092"),
-                            GroupId = "jenner",
+                            BootstrapServers = configuration.GetConnectionString(@"KafkaBootstrap"),
+                            GroupId = "consultar-worker",
                             AutoOffsetReset = AutoOffsetReset.Earliest
                         };
                         return new ConsumerBuilder<string, byte[]>(config).Build();
