@@ -36,7 +36,7 @@ namespace Jenner.Consultar.API.Controllers
                 Id = Guid.NewGuid().ToString(),
                 Type = "string enviada",
                 Source = new UriBuilder(requestSource).Uri,
-                Data = Encoding.ASCII.GetBytes(request.Teste)
+                Data = request.Teste
             };
             await PublishToKafka(cloudEvent, cancellationToken);
 

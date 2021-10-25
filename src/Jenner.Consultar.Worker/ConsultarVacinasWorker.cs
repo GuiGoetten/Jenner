@@ -1,8 +1,6 @@
-﻿using CloudNative.CloudEvents;
-using CloudNative.CloudEvents.Kafka;
+﻿using CloudNative.CloudEvents.Kafka;
 using CloudNative.CloudEvents.SystemTextJson;
 using Confluent.Kafka;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,7 +9,6 @@ namespace Jenner.Consultar.Worker
 {
     class ConsultarVacinasWorker : ConsumeWorker
     {
-        private readonly ISender sender;
         public ConsultarVacinasWorker(
             IServiceProvider serviceProvider): base(serviceProvider, new JsonEventFormatter<string>())
         {
@@ -25,16 +22,14 @@ namespace Jenner.Consultar.Worker
             }
 
             KafkaConsumer.Subscribe("jenner");
-
             while (!cancellationToken.IsCancellationRequested)
             {
                 try
                 {
                     Console.WriteLine("Ouvindo...");
+
                     ConsumeResult<string, byte[]> result = KafkaConsumer.Consume(cancellationToken);
-
                     var cloudEvent = result.Message.ToCloudEvent(cloudEventFormatter);
-
                     if (cloudEvent.Data is string mensagem)
                     {
                         Console.WriteLine($"Consumed message '{mensagem}' at: '{cloudEvent.Type}'.");
