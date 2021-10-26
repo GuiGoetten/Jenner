@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace Jenner.Consultar.Worker
 {
-    public abstract class Worker : BackgroundService
+    public abstract class ConsumeWorker : BackgroundService
     {
         protected readonly IServiceProvider serviceProvider;
         protected readonly CloudEventFormatter cloudEventFormatter;
         protected IConsumer<string, byte[]> KafkaConsumer { get; private set; } = null;
 
-        public Worker(
+        public ConsumeWorker(
             IServiceProvider serviceProvider,
             CloudEventFormatter formatter = null)
         {
@@ -29,10 +29,10 @@ namespace Jenner.Consultar.Worker
             KafkaConsumer = serviceProvider
                 .CreateScope().ServiceProvider
                 .GetRequiredService<IConsumer<string, byte[]>>();
-            return Task.Run(() => DoScoped(stoppingToken), stoppingToken);  // TALVEZ PRECISE MUDAR AQUI
+            return Task.Run(() => DoScopedAsync(stoppingToken), stoppingToken);  // TALVEZ PRECISE MUDAR AQUI
         }
 
-        protected abstract void DoScoped(CancellationToken cancellationToken);
+        protected abstract Task DoScopedAsync(CancellationToken cancellationToken);
 
         public override void Dispose()
         {
