@@ -1,12 +1,11 @@
 ﻿using CloudNative.CloudEvents;
 using CloudNative.CloudEvents.Kafka;
 using Confluent.Kafka;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Jenner.Consultar.API.Controllers
+namespace Jenner.Consultar.API.Providers
 {
 
     public class KafkaPublisherBase
