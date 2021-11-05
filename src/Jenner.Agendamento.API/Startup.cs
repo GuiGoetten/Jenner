@@ -26,10 +26,10 @@ namespace Jenner.Agendamento.API
         {
             services.AddHttpContextAccessor();
             services.AddMediatR(GetType().Assembly);
-            services.Configure<ForwardedHeadersOptions>(fwh =>
-            {
-                fwh.ForwardedHeaders = ForwardedHeaders.All;
-            });
+            //services.Configure<ForwardedHeadersOptions>(fwh =>
+            //{
+            //    fwh.ForwardedHeaders = ForwardedHeaders.All;
+            //});
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -60,12 +60,12 @@ namespace Jenner.Agendamento.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Jenner.Agendamento.API v1"));
             }
-            app.UseForwardedHeaders();
+            //app.UseForwardedHeaders();
 
-            if (!Configuration.GetValue<bool>("DOTNET_RUNNING_IN_CONTAINER"))
-            {
-                app.UseHttpsRedirection();
-            }
+            //if (!Configuration.GetValue<bool>("DOTNET_RUNNING_IN_CONTAINER"))
+            //{
+            //    app.UseHttpsRedirection();
+            //}
 
             app.UseRouting();
 

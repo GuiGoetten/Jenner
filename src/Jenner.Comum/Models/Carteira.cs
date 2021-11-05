@@ -2,7 +2,7 @@
 
 namespace Jenner.Comum.Models
 {
-    class Carteira
+    public class Carteira
     {
 
         public string CPF { get; set; }
