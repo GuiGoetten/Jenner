@@ -1,6 +1,7 @@
 ﻿using CloudNative.CloudEvents;
 using Confluent.Kafka;
 using Jenner.Agendamento.API.Providers;
+using Jenner.Comum;
 using Jenner.Comum.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -22,7 +23,8 @@ namespace Jenner.Agendamento.API.Services
     public class AgendamentoCreateHandler : KafkaPublisherBase, IRequestHandler<AgendamentoCreate, Aplicacao>
     {
         public IHttpContextAccessor HttpContextAccessor { get; }
-        public AgendamentoCreateHandler(IHttpContextAccessor httpContextAccessor, IProducer<string, byte[]> producer, CloudEventFormatter cloudEventFormatter) : base(producer, cloudEventFormatter, "Vacinacao.Agendada")
+        public AgendamentoCreateHandler(IHttpContextAccessor httpContextAccessor, IProducer<string, byte[]> producer, CloudEventFormatter cloudEventFormatter) : 
+            base(producer, cloudEventFormatter, Constants.CloudEvents.AgendadaTopic)
         {
             HttpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         }
@@ -41,7 +43,7 @@ namespace Jenner.Agendamento.API.Services
             var cloudEvent = new CloudEvent
             {
                 Id = Guid.NewGuid().ToString(),
-                Type = "Aplicacao agendada",
+                Type = Constants.CloudEvents.AgendadaType,
                 Source = new UriBuilder(requestSource).Uri,
                 Data = request.Aplicacao
             };

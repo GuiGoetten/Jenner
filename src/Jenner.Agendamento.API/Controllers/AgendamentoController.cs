@@ -1,4 +1,6 @@
-﻿using Jenner.Agendamento.API.Services;
+﻿using AutoMapper;
+using Jenner.Agendamento.API.Services;
+using Jenner.Agendamento.API.ViewModels;
 using Jenner.Comum.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -13,20 +15,25 @@ namespace Jenner.Agendamento.API.Controllers
     public class AgendamentoController : ControllerBase
     {
         private readonly ISender sender;
+        private readonly IMapper _mapper;
 
         private CancellationToken Token => HttpContext?.RequestAborted ?? default;
 
-        public AgendamentoController(ISender sender)
+        public AgendamentoController(ISender sender, IMapper mapper)
         {
             this.sender = sender ?? throw new System.ArgumentNullException(nameof(sender));
+            _mapper = mapper ?? throw new System.ArgumentNullException(nameof(mapper));
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Create([FromBody] AgendamentoCreate agendamentoCreate)
+        public async Task<IActionResult> Create([FromBody] AplicacaoCreate novoAgendamento)
         {
-            Aplicacao result = await sender.Send(agendamentoCreate);
+
+            var criarAplicacao = _mapper.Map<Aplicacao>(novoAgendamento);
+
+            Aplicacao result = await sender.Send(new AgendamentoCreate(criarAplicacao));
             
             return Ok(result);
             

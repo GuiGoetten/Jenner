@@ -4,11 +4,13 @@ using Confluent.Kafka;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using AutoMapper;
+using Jenner.Agendamento.API.ViewModels;
+using Jenner.Agendamento.API.Services.Consumer;
 
 namespace Jenner.Agendamento.API
 {
@@ -36,6 +38,21 @@ namespace Jenner.Agendamento.API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Jenner.Agendamento.API", Version = "v1" });
             });
             AddKafkaServices(services);
+            services.AddAutoMapper(ProfileRegistration.GetProfiles());
+
+
+            services.AddScoped(c =>
+            {
+                var config = new ConsumerConfig
+                {
+                    BootstrapServers = Configuration.GetConnectionString(@"KafkaBootstrap"),
+                    GroupId = "agendar-worker",
+                    AutoOffsetReset = AutoOffsetReset.Earliest
+                };
+                return new ConsumerBuilder<string, byte[]>(config).Build();
+            });
+
+            services.AddHostedService<AgendarWorker>();
         }
 
         private void AddKafkaServices(IServiceCollection services)

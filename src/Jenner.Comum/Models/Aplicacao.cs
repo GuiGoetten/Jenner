@@ -2,6 +2,9 @@
 
 namespace Jenner.Comum.Models
 {
+    /// <summary>
+    /// Modelo de aplicação
+    /// </summary>
     public class Aplicacao
     {
         public string CPF { get; set; }

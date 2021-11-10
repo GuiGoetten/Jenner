@@ -25,6 +25,25 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    
+
+  init-kafka:
+    image: confluentinc/cp-kafka:6.1.1
+    depends_on:
+      - kafka
+    entrypoint: [ '/bin/sh', '-c' ]
+    command: |
+        "
+        # blocks until kafka is reachable
+        kafka-topics --bootstrap-server kafka:29092 --list
+
+        echo -e 'Creating kafka topics'
+              kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic Vacinacao.Agendada && \
+              kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic Vacinacao.Agendar && \
+
+        echo -e 'Successfully created the following topics:'
+        kafka-topics --bootstrap-server kafka:29092 --list
+        "
 
   kafdrop:
     container_name: kafka-gui
@@ -38,15 +57,7 @@ services:
 
   # Our own services
 
-  Jenner.Consultar.Worker:
-    environment:
-      - ConnectionStrings__KafkaBootstrap=kafka:29092
-    ports:
-      - "7777:7777"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-
-  Jenner.Consultar.API:
+  Jenner.Agendamento.API:
     environment:
       - ConnectionStrings__KafkaBootstrap=kafka:29092
       - ASPNETCORE_ENVIRONMENT=Development
