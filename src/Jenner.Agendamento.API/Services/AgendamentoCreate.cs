@@ -34,7 +34,7 @@ namespace Jenner.Agendamento.API.Services
 
             //TODO: Conversar com o banco, para tentar agendar a aplicação
 
-            request.Aplicacao.Id = Guid.NewGuid();
+            //request.Aplicacao.Id = Guid.NewGuid();
 
             //TODO: Após isso, envia a aplicação para a fila de aplicações agendadas e retorna para o usuário o comprovante do agendamento (aplicação com o GUID preenchido)
 
