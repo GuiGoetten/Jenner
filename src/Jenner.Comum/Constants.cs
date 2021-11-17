@@ -8,6 +8,11 @@ namespace Jenner.Comum
 {
     public static class Constants
     {
+
+        public const string MongoConnectionString = @"MongoDb";
+
+        public const string MongoAgendamentoDatabase = @"jenner-agendamento";
+
         public static class CloudEvents
         {
             public const string AgendadaTopic = "Vacinacao.Agendada";

@@ -11,6 +11,8 @@ using Microsoft.OpenApi.Models;
 using AutoMapper;
 using Jenner.Agendamento.API.ViewModels;
 using Jenner.Agendamento.API.Services.Consumer;
+using MongoDB.Driver;
+using Jenner.Comum;
 
 namespace Jenner.Agendamento.API
 {
@@ -28,18 +30,17 @@ namespace Jenner.Agendamento.API
         {
             services.AddHttpContextAccessor();
             services.AddMediatR(GetType().Assembly);
-            //services.Configure<ForwardedHeadersOptions>(fwh =>
-            //{
-            //    fwh.ForwardedHeaders = ForwardedHeaders.All;
-            //});
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Jenner.Agendamento.API", Version = "v1" });
             });
+            
             AddKafkaServices(services);
-            services.AddAutoMapper(ProfileRegistration.GetProfiles());
+            AddMongoServices(services);
 
+            services.AddAutoMapper(ProfileRegistration.GetProfiles());
 
             services.AddScoped(c =>
             {
@@ -66,6 +67,19 @@ namespace Jenner.Agendamento.API
                 return new ProducerBuilder<string, byte[]>(config).Build();
             });
             services.AddSingleton<CloudEventFormatter>(new JsonEventFormatter());
+        }
+
+        private void AddMongoServices(IServiceCollection services)
+        {
+            services.AddSingleton(_ =>
+            {
+                return new MongoClient(Configuration.GetConnectionString(Constants.MongoConnectionString));
+            });
+            services.AddScoped(sp =>
+            {
+                MongoClient mongoClient = sp.GetRequiredService<MongoClient>();
+                return mongoClient.GetDatabase(Constants.MongoAgendamentoDatabase);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
