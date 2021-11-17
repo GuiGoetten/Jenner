@@ -41,11 +41,11 @@ namespace Jenner.Agendamento.API.Services.Consumer
 
                     ConsumeResult<string, byte[]> result = KafkaConsumer.Consume(cancellationToken);
                     var cloudEvent = result.Message.ToCloudEvent(cloudEventFormatter);
-                    if (cloudEvent.Data is Aplicacao mensagem)
+                    if (cloudEvent.Data is AgendamentoCreate mensagem)
                     {
                         try 
                         {
-                            await sender.Send(new AgendamentoCreate(cloudEvent.Data as Aplicacao));
+                            await sender.Send(cloudEvent.Data as AgendamentoCreate);
                         }
                         catch (Exception e)
                         {

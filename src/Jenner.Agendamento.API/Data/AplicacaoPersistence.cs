@@ -12,13 +12,13 @@ namespace Jenner.Agendamento.API.Data
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public string CPF { get; set; }
-        public Guid IdVacina { get; set; }
+        public string NomeVacina { get; set; }
         public int Dose { get; set; }
-        public VacinaPersistence Vacina { get; set; }
+        //public VacinaPersistence Vacina { get; set; }
         public DateTime DataAgendamento { get; set; }
         public DateTime? DataAplicacao { get; set; }
-        public CarteiraPersistence Carteira { get; set; }  
-        public Aplicacao ToAplicacao() => new(Id, CPF, IdVacina, Dose, DataAgendamento, DataAplicacao, Vacina.ToVacina(), Carteira.ToCarteira());
+        //public CarteiraPersistence Carteira { get; set; }  
+        public Aplicacao ToAplicacao() => new(Id, CPF, NomeVacina, Dose, DataAgendamento, DataAplicacao);//, Vacina.ToVacina(), Carteira.ToCarteira());
 
     }
 
@@ -30,12 +30,12 @@ namespace Jenner.Agendamento.API.Data
             {
                 Id = aplicacao.Id,
                 CPF = aplicacao.Cpf,
-                IdVacina = aplicacao.idVacina,
+                NomeVacina = aplicacao.NomeVacina,
                 Dose = aplicacao.Dose,
-                Vacina = aplicacao.Vacina.ToPersistence(),
+                //Vacina = aplicacao.Vacina.ToPersistence(),
                 DataAgendamento = aplicacao.DataAgendamento,
-                DataAplicacao = aplicacao.DataAplicacao,
-                Carteira = aplicacao.Carteira.ToPersistence()
+                DataAplicacao = aplicacao.DataAplicacao
+                //Carteira = aplicacao.Carteira.ToPersistence()
             };
         }
 

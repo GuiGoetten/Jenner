@@ -15,11 +15,13 @@ namespace Jenner.Agendamento.API.Services
 {
     public class AgendamentoCreate : IRequest<Aplicacao>
     {
-        public Aplicacao Aplicacao { get; set; }
-        public AgendamentoCreate(Aplicacao aplicacao)
-        {
-            Aplicacao = aplicacao ?? throw new ArgumentNullException(nameof(aplicacao));
-        }        
+        public string CPF { get; set; }
+
+        public string NomeVacina { get; set; }
+
+        public int Dose { get; set; }
+
+        public DateTime DataAgendamento { get; set; }
     }
 
     public class AgendamentoCreateHandler : KafkaPublisherBase, IRequestHandler<AgendamentoCreate, Aplicacao>
@@ -42,10 +44,10 @@ namespace Jenner.Agendamento.API.Services
             //request.Aplicacao.Id = Guid.NewGuid();
             var agendamentoPoco = new AplicacaoPersistence
             {
-                CPF = request.Aplicacao.Cpf,
-                DataAgendamento = request.Aplicacao.DataAgendamento,
-                Dose = request.Aplicacao.Dose,
-                IdVacina = request.Aplicacao.idVacina
+                CPF = request.CPF,
+                DataAgendamento = request.DataAgendamento,
+                Dose = request.Dose,
+                NomeVacina = request.NomeVacina
             };
 
             await MongoDatabase
@@ -61,13 +63,13 @@ namespace Jenner.Agendamento.API.Services
                 Id = Guid.NewGuid().ToString(),
                 Type = Constants.CloudEvents.AgendadaType,
                 Source = new UriBuilder(requestSource).Uri,
-                Data = request.Aplicacao
+                Data = request
             };
 
             //TODO: Fazer esse trem ficar assíncrono de verdade
             await PublishToKafka(cloudEvent, cancellationToken);
 
-            return await Task.FromResult(request.Aplicacao);
+            return await Task.FromResult(agendamentoPoco.ToAplicacao());
         }
     }
 }

@@ -28,13 +28,14 @@ namespace Jenner.Agendamento.API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Create([FromBody] AplicacaoCreate novoAgendamento)
+        public async Task<IActionResult> Create([FromBody] AgendamentoCreate novoAgendamento)
         {
 
-            var criarAplicacao = _mapper.Map<Aplicacao>(novoAgendamento);
+            //var criarAplicacao = _mapper.Map<Aplicacao>(novoAgendamento);
 
-            Aplicacao result = await sender.Send(new AgendamentoCreate(criarAplicacao));
-            
+            //Aplicacao result = await sender.Send(new AgendamentoCreate(criarAplicacao));
+            Aplicacao result = await sender.Send(novoAgendamento);
+
             return Ok(result);
             
             //TODO: Arrumar o retorno, para retornar um 201 quando criado com sucesso + o objeto criado com o ID correto
