@@ -15,7 +15,7 @@ namespace Jenner.Agendamento.API.Data
         public string NomePessoa { get; set; }
         public DateTime DataNascimento { get; set; }
         public IEnumerable<Aplicacao> Aplicacoes { get; set; } = Enumerable.Empty<Aplicacao>();
-        public Carteira ToCarteira() => new (Cpf, NomePessoa, DataNascimento) { Aplicacoes = Aplicacoes};
+        public Carteira ToCarteira() => new (Cpf, NomePessoa, DataNascimento) { Aplicacoes = Aplicacoes ?? Enumerable.Empty<Aplicacao>() };
     }
 
     public static class CarteiraPersistenceExtensions
@@ -27,7 +27,7 @@ namespace Jenner.Agendamento.API.Data
                 Cpf = carteira.Cpf,
                 NomePessoa = carteira.NomePessoa,
                 DataNascimento = carteira.DataNascimento,
-                Aplicacoes = carteira.Aplicacoes
+                Aplicacoes = carteira.Aplicacoes ?? Enumerable.Empty<Aplicacao>()
             };
         }
 
@@ -61,8 +61,7 @@ namespace Jenner.Agendamento.API.Data
                     {
                         Cpf = cpf,
                         NomePessoa = nomePessoa,
-                        DataNascimento = dataNascimento,
-                        Aplicacoes = Enumerable.Empty<Aplicacao>()
+                        DataNascimento = dataNascimento
                     }, cancellationToken);
 
                 if (mongoResult is null)
