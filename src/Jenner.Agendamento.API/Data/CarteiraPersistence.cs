@@ -2,6 +2,7 @@
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,8 +14,8 @@ namespace Jenner.Agendamento.API.Data
         public string Cpf { get; set; }
         public string NomePessoa { get; set; }
         public DateTime DataNascimento { get; set; }
-        public IEnumerable<Aplicacao> Aplicacoes { get; set; }
-        public Carteira ToCarteira() => new (Cpf, NomePessoa, DataNascimento) { Aplicacoes = this.Aplicacoes};
+        public IEnumerable<Aplicacao> Aplicacoes { get; set; } = Enumerable.Empty<Aplicacao>();
+        public Carteira ToCarteira() => new (Cpf, NomePessoa, DataNascimento) { Aplicacoes = Aplicacoes};
     }
 
     public static class CarteiraPersistenceExtensions
@@ -57,7 +58,8 @@ namespace Jenner.Agendamento.API.Data
                     { 
                         Cpf = cpf, 
                         NomePessoa = nomePessoa, 
-                        DataNascimento = dataNascimento
+                        DataNascimento = dataNascimento,
+                        Aplicacoes = Enumerable.Empty<Aplicacao>()
                     }, cancellationToken);
         }
 
