@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Jenner.Comum.Models
 {
-    public record Carteira(string Cpf, string NomePessoa, DateTime DataNascimento) : ICarteira
+    public record Carteira(Guid Id, string Cpf, string NomePessoa, DateTime DataNascimento) : ICarteira
     {
         public IEnumerable<Aplicacao> Aplicacoes { get; init; } = Enumerable.Empty<Aplicacao>();
 

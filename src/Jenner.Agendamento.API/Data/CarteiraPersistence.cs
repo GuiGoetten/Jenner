@@ -15,7 +15,7 @@ namespace Jenner.Agendamento.API.Data
         public string NomePessoa { get; set; }
         public DateTime DataNascimento { get; set; }
         public IEnumerable<Aplicacao> Aplicacoes { get; set; } = Enumerable.Empty<Aplicacao>();
-        public Carteira ToCarteira() => new (Cpf, NomePessoa, DataNascimento) { Aplicacoes = Aplicacoes ?? Enumerable.Empty<Aplicacao>() };
+        public Carteira ToCarteira() => new (Id, Cpf, NomePessoa, DataNascimento) { Aplicacoes = Aplicacoes ?? Enumerable.Empty<Aplicacao>() };
     }
 
     public static class CarteiraPersistenceExtensions
@@ -24,6 +24,7 @@ namespace Jenner.Agendamento.API.Data
         {
             return new()
             {
+                Id = carteira.Id,
                 Cpf = carteira.Cpf,
                 NomePessoa = carteira.NomePessoa,
                 DataNascimento = carteira.DataNascimento,
@@ -85,7 +86,7 @@ namespace Jenner.Agendamento.API.Data
         public static async Task<Carteira> UpdateAsync(this IMongoCollection<CarteiraPersistence> collection, CarteiraPersistence carteira, CancellationToken cancellationToken = default)
         {
             _ = await collection
-                .ReplaceOneAsync(s => s.Cpf.Equals(carteira.Cpf) && s.NomePessoa.Equals(carteira.NomePessoa), carteira, new ReplaceOptions(), cancellationToken);
+                .ReplaceOneAsync(s => s.Id.Equals(carteira.Id), carteira, new ReplaceOptions(), cancellationToken);
             return carteira.ToCarteira();
         }
     }
