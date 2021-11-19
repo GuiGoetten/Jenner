@@ -8,6 +8,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,12 +16,11 @@ namespace Jenner.Agendamento.API.Services
 {
     public class AgendamentoCreate : IRequest<Aplicacao>
     {
-        public string CPF { get; set; }
-
+        public string Cpf { get; set; }
+        public string NomePessoa { get; set; }
+        public DateTime DataNascimento { get; set; }
         public string NomeVacina { get; set; }
-
         public int Dose { get; set; }
-
         public DateTime DataAgendamento { get; set; }
     }
 
@@ -39,20 +39,17 @@ namespace Jenner.Agendamento.API.Services
         public async Task<Aplicacao> Handle(AgendamentoCreate request, CancellationToken cancellationToken)
         {
 
-            //TODO: Conversar com o banco, para tentar agendar a aplicação
+            Carteira carteiraResult = await MongoDatabase
+                .GetCarteiraCollection()
+                .FindOrCreateAsync(request.Cpf, request.NomePessoa, request.DataNascimento, cancellationToken);
 
-            //request.Aplicacao.Id = Guid.NewGuid();
-            var agendamentoPoco = new AplicacaoPersistence
-            {
-                CPF = request.CPF,
-                DataAgendamento = request.DataAgendamento,
-                Dose = request.Dose,
-                NomeVacina = request.NomeVacina
-            };
+            Aplicacao aplicacaoAgendada = new(carteiraResult.Cpf, carteiraResult.NomePessoa, request.NomeVacina, request.Dose, request.DataAgendamento, null);
 
-            await MongoDatabase
-                .GetAplicacaoCollection()
-                .InsertNewAsync(agendamentoPoco, cancellationToken);
+            carteiraResult = carteiraResult.AddAplicacao(aplicacaoAgendada);
+
+            carteiraResult = await MongoDatabase
+                .GetCarteiraCollection()
+                .UpdateAsync(carteiraResult.ToPersistence(), cancellationToken);
 
             //TODO: Após isso, envia a aplicação para a fila de aplicações agendadas e retorna para o usuário o comprovante do agendamento (aplicação com o GUID preenchido)
 
@@ -63,13 +60,13 @@ namespace Jenner.Agendamento.API.Services
                 Id = Guid.NewGuid().ToString(),
                 Type = Constants.CloudEvents.AgendadaType,
                 Source = new UriBuilder(requestSource).Uri,
-                Data = request
+                Data = carteiraResult
             };
 
             //TODO: Fazer esse trem ficar assíncrono de verdade
             await PublishToKafka(cloudEvent, cancellationToken);
 
-            return await Task.FromResult(agendamentoPoco.ToAplicacao());
+            return await Task.FromResult(aplicacaoAgendada);
         }
     }
 }

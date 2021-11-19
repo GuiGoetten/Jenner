@@ -1,16 +1,27 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Jenner.Comum.Models
 {
-    public record Carteira(Guid Id, string CPF, string NomePessoa)
+    public record Carteira(string Cpf, string NomePessoa, DateTime DataNascimento) : ICarteira
     {
-        public IEnumerable<Aplicacao> Aplicacoes { get; private set; }
-        public Carteira(Guid id, string cpf, string nomePessoa, IEnumerable<Aplicacao> aplicacoes) : this(id, cpf, nomePessoa)
+        public IEnumerable<Aplicacao> Aplicacoes { get; init; } = Enumerable.Empty<Aplicacao>();
+
+        public Carteira AddAplicacao(Aplicacao aplicacao)
         {
-            Aplicacoes = new HashSet<Aplicacao>(aplicacoes) ?? new HashSet<Aplicacao>();
+            return this with
+            {
+                Aplicacoes = new List<Aplicacao>(Aplicacoes)
+                {
+                    aplicacao
+                },
+            };
+        }
+
+        public Aplicacao GetLatestAplicacao() 
+        {
+            return Aplicacoes.Last();
         }
 
     }
