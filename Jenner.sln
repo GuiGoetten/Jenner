@@ -11,9 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jenner.Consultar.API", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jenner.Consultar.Worker", "src\Jenner.Consultar.Worker\Jenner.Consultar.Worker.csproj", "{F65C0B4A-3E5F-427E-A7CE-277D1AF40AE8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jenner.Vacinar.API", "src\Jenner.Vacinar.API\Jenner.Vacinar.API.csproj", "{47071314-63B1-47FC-90FC-EC02980375B0}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jenner.Vacinar.Worker", "src\Jenner.Vacinar.Worker\Jenner.Vacinar.Worker.csproj", "{CA108FC9-7E7A-4712-80FC-CAF7BCFB0F94}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jenner.Agendamento.API", "src\Jenner.Agendamento.API\Jenner.Agendamento.API.csproj", "{A8201CB1-91E6-4610-ADAD-528A74CA5FA9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,14 +35,10 @@ Global
 		{F65C0B4A-3E5F-427E-A7CE-277D1AF40AE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F65C0B4A-3E5F-427E-A7CE-277D1AF40AE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F65C0B4A-3E5F-427E-A7CE-277D1AF40AE8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{47071314-63B1-47FC-90FC-EC02980375B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{47071314-63B1-47FC-90FC-EC02980375B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{47071314-63B1-47FC-90FC-EC02980375B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{47071314-63B1-47FC-90FC-EC02980375B0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CA108FC9-7E7A-4712-80FC-CAF7BCFB0F94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CA108FC9-7E7A-4712-80FC-CAF7BCFB0F94}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CA108FC9-7E7A-4712-80FC-CAF7BCFB0F94}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CA108FC9-7E7A-4712-80FC-CAF7BCFB0F94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8201CB1-91E6-4610-ADAD-528A74CA5FA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8201CB1-91E6-4610-ADAD-528A74CA5FA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8201CB1-91E6-4610-ADAD-528A74CA5FA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8201CB1-91E6-4610-ADAD-528A74CA5FA9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

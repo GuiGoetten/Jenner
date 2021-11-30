@@ -1,9 +1,12 @@
-﻿namespace Jenner.Comum.Models
-{
-    public class Vacina
-    {
-        public string Nome { get; set; }
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
+using System.Collections.Generic;
 
-        public string Descricao { get; set; }
+namespace Jenner.Comum.Models
+{
+    public record Vacina(string NomeVacina, string Descricao, int Doses) : IVacina
+    {
+
     }
 }

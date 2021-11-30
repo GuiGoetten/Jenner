@@ -4,13 +4,17 @@ using Confluent.Kafka;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using AutoMapper;
+using Jenner.Agendamento.API.ViewModels;
+using Jenner.Agendamento.API.Services.Consumer;
+using MongoDB.Driver;
+using Jenner.Comum;
 
-namespace Jenner.Consultar.API
+namespace Jenner.Agendamento.API
 {
     public class Startup
     {
@@ -26,17 +30,30 @@ namespace Jenner.Consultar.API
         {
             services.AddHttpContextAccessor();
             services.AddMediatR(GetType().Assembly);
-            services.Configure<ForwardedHeadersOptions>(fwh =>
-            {
-                fwh.ForwardedHeaders = ForwardedHeaders.All;
-            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Jenner.Consultar.API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Jenner.Agendamento.API", Version = "v1" });
             });
+            
             AddKafkaServices(services);
+            AddMongoServices(services);
+
+            services.AddAutoMapper(ProfileRegistration.GetProfiles());
+
+            services.AddScoped(c =>
+            {
+                var config = new ConsumerConfig
+                {
+                    BootstrapServers = Configuration.GetConnectionString(@"KafkaBootstrap"),
+                    GroupId = "agendar-worker",
+                    AutoOffsetReset = AutoOffsetReset.Earliest
+                };
+                return new ConsumerBuilder<string, byte[]>(config).Build();
+            });
+
+            services.AddHostedService<AgendarWorker>();
         }
 
         private void AddKafkaServices(IServiceCollection services)
@@ -52,6 +69,19 @@ namespace Jenner.Consultar.API
             services.AddSingleton<CloudEventFormatter>(new JsonEventFormatter());
         }
 
+        private void AddMongoServices(IServiceCollection services)
+        {
+            services.AddSingleton(_ =>
+            {
+                return new MongoClient(Configuration.GetConnectionString(Constants.MongoConnectionString));
+            });
+            services.AddScoped(sp =>
+            {
+                MongoClient mongoClient = sp.GetRequiredService<MongoClient>();
+                return mongoClient.GetDatabase(Constants.MongoAgendamentoDatabase);
+            });
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -59,14 +89,14 @@ namespace Jenner.Consultar.API
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Jenner.Consultar.API v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Jenner.Agendamento.API v1"));
             }
-            app.UseForwardedHeaders();
+            //app.UseForwardedHeaders();
 
-            if (!Configuration.GetValue<bool>("DOTNET_RUNNING_IN_CONTAINER"))
-            {
-                app.UseHttpsRedirection();
-            }
+            //if (!Configuration.GetValue<bool>("DOTNET_RUNNING_IN_CONTAINER"))
+            //{
+            //    app.UseHttpsRedirection();
+            //}
 
             app.UseRouting();
 

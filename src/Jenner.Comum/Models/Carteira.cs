@@ -1,14 +1,28 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Jenner.Comum.Models
 {
-    class Carteira
+    public record Carteira(Guid Id, string Cpf, string NomePessoa, DateTime DataNascimento) : ICarteira
     {
+        public IEnumerable<Aplicacao> Aplicacoes { get; init; } = Enumerable.Empty<Aplicacao>();
 
-        public string Cpf { get; set; }
+        public Carteira AddAplicacao(Aplicacao aplicacao)
+        {
+            return this with
+            {
+                Aplicacoes = new List<Aplicacao>(Aplicacoes)
+                {
+                    aplicacao
+                },
+            };
+        }
 
-        public string NomePessoa { get; set; }
+        public Aplicacao GetLatestAplicacao() 
+        {
+            return Aplicacoes.Last();
+        }
 
-        public virtual ICollection<Vacinacao> Vacinas { get; set; }
     }
 }
