@@ -2,7 +2,6 @@
 using CloudNative.CloudEvents.SystemTextJson;
 using Confluent.Kafka;
 using Jenner.Agendamento.API.Providers;
-using Jenner.Agendamento.API.ViewModels;
 using Jenner.Comum;
 using Jenner.Comum.Models;
 using MediatR;

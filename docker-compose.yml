@@ -18,3 +18,9 @@ services:
     build:
       context: .
       dockerfile: src/Jenner.Agendamento.API/Dockerfile
+
+  Jenner.Aplicacao.API:
+    image: ${DOCKER_REGISTRY-}jenneraplicacaoapi
+    build:
+      context: .
+      dockerfile: src/Jenner.Aplicacao.API/Dockerfile

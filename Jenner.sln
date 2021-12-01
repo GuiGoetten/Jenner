@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jenner.Consultar.API", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jenner.Consultar.Worker", "src\Jenner.Consultar.Worker\Jenner.Consultar.Worker.csproj", "{F65C0B4A-3E5F-427E-A7CE-277D1AF40AE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jenner.Agendamento.API", "src\Jenner.Agendamento.API\Jenner.Agendamento.API.csproj", "{A8201CB1-91E6-4610-ADAD-528A74CA5FA9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jenner.Agendamento.API", "src\Jenner.Agendamento.API\Jenner.Agendamento.API.csproj", "{A8201CB1-91E6-4610-ADAD-528A74CA5FA9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jenner.Aplicacao.API", "src\Jenner.Aplicacao.API\Jenner.Aplicacao.API.csproj", "{B67C47EE-42DF-49E0-873E-7A2DABC839BB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{A8201CB1-91E6-4610-ADAD-528A74CA5FA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8201CB1-91E6-4610-ADAD-528A74CA5FA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8201CB1-91E6-4610-ADAD-528A74CA5FA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B67C47EE-42DF-49E0-873E-7A2DABC839BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B67C47EE-42DF-49E0-873E-7A2DABC839BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B67C47EE-42DF-49E0-873E-7A2DABC839BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B67C47EE-42DF-49E0-873E-7A2DABC839BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
