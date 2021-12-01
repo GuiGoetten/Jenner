@@ -8,11 +8,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Jenner.Agendamento.API.Services.Consumer;
+using AutoMapper;
 using MongoDB.Driver;
+using Microsoft.AspNetCore.Http;
 using Jenner.Comum;
+//using Jenner.Comum;
 
-namespace Jenner.Agendamento.API
+namespace Jenner.Aplicacao.API
 {
     public class Startup
     {
@@ -22,8 +24,8 @@ namespace Jenner.Agendamento.API
         }
 
         public IConfiguration Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
+        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpContextAccessor();
@@ -32,11 +34,14 @@ namespace Jenner.Agendamento.API
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Jenner.Agendamento.API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Jenner.Aplicacao.API", Version = "v1" });
             });
-            
+
             AddKafkaServices(services);
             AddMongoServices(services);
+
+            //Adicionar os profiles
+            //services.AddAutoMapper(ProfileRegistration.GetProfiles());
 
             services.AddScoped(c =>
             {
@@ -49,7 +54,7 @@ namespace Jenner.Agendamento.API
                 return new ConsumerBuilder<string, byte[]>(config).Build();
             });
 
-            services.AddHostedService<AgendarWorker>();
+            //services.AddHostedService<AgendarWorker>();
         }
 
         private void AddKafkaServices(IServiceCollection services)
@@ -74,7 +79,7 @@ namespace Jenner.Agendamento.API
             services.AddScoped(sp =>
             {
                 MongoClient mongoClient = sp.GetRequiredService<MongoClient>();
-                return mongoClient.GetDatabase(Constants.MongoAgendamentoDatabase);
+                return mongoClient.GetDatabase(Constants.MongoAplicacaoDatabase);
             });
         }
 
@@ -85,14 +90,8 @@ namespace Jenner.Agendamento.API
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Jenner.Agendamento.API v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Jenner.Aplicacao.API v1"));
             }
-            //app.UseForwardedHeaders();
-
-            //if (!Configuration.GetValue<bool>("DOTNET_RUNNING_IN_CONTAINER"))
-            //{
-            //    app.UseHttpsRedirection();
-            //}
 
             app.UseRouting();
 
