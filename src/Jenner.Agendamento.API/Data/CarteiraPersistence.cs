@@ -1,4 +1,5 @@
 ﻿using Jenner.Comum.Models;
+using Jenner.Comum.Models.Validators;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -43,6 +44,8 @@ namespace Jenner.Agendamento.API.Data
         }
         public static async Task<CarteiraPersistence> InsertNewAsync(this IMongoCollection<CarteiraPersistence> collection, CarteiraPersistence carteira, CancellationToken cancellationToken = default)
         {
+            carteira.ValidaCarteira();
+
             await collection.InsertOneAsync(carteira, null, cancellationToken);
             return carteira;
         }
@@ -57,13 +60,16 @@ namespace Jenner.Agendamento.API.Data
             {
                 Console.WriteLine("Não encontrou no banco... vamos criar");
 
-                mongoResult = await collection.InsertNewAsync(
-                    new CarteiraPersistence()
-                    {
-                        Cpf = cpf,
-                        NomePessoa = nomePessoa,
-                        DataNascimento = dataNascimento
-                    }, cancellationToken);
+                CarteiraPersistence novaCarteira = new CarteiraPersistence()
+                {
+                    Cpf = cpf,
+                    NomePessoa = nomePessoa,
+                    DataNascimento = dataNascimento
+                };
+
+                novaCarteira.ValidaCarteira();
+
+                mongoResult = await collection.InsertNewAsync(novaCarteira, cancellationToken);
 
                 if (mongoResult is null)
                 {
@@ -85,6 +91,8 @@ namespace Jenner.Agendamento.API.Data
 
         public static async Task<Carteira> UpdateAsync(this IMongoCollection<CarteiraPersistence> collection, CarteiraPersistence carteira, CancellationToken cancellationToken = default)
         {
+            carteira.ValidaCarteira();
+
             _ = await collection
                 .ReplaceOneAsync(s => s.Id.Equals(carteira.Id), carteira, new ReplaceOptions(), cancellationToken);
             return carteira.ToCarteira();

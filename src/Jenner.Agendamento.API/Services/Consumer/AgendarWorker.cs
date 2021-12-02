@@ -22,7 +22,6 @@ namespace Jenner.Agendamento.API.Services.Consumer
 
         protected override async Task DoScopedAsync(CancellationToken cancellationToken)
         {
-            Console.WriteLine("Teste");
             if (KafkaConsumer is null)
             {
                 throw new ArgumentException("For some reason the Consumer is null, this shouldn't happen.");
@@ -34,21 +33,20 @@ namespace Jenner.Agendamento.API.Services.Consumer
             {
                 try
                 {
-                    //TODO: Pra retirar depois
-                    Console.WriteLine("Ouvindo...");
-
 
                     ConsumeResult<string, byte[]> result = KafkaConsumer.Consume(cancellationToken);
+                    
                     var cloudEvent = result.Message.ToCloudEvent(cloudEventFormatter);
+
                     if (cloudEvent.Data is AgendamentoCreate mensagem)
                     {
                         try 
                         {
-                            await sender.Send(cloudEvent.Data as AgendamentoCreate);
+                            await sender.Send(cloudEvent.Data as AgendamentoCreate, cancellationToken);
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine($"Não rescebi uma aplicacao {e.Message}");
+                            Console.WriteLine($"O valor recebido não é uma plicação válida. {e.Message}");
                         }
                     }
                 }
