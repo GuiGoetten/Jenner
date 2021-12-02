@@ -7,7 +7,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Jenner.Agendamento.API.Providers
+namespace Jenner.Aplicacao.API.Providers
 {
     public abstract class KafkaConsumerBase : BackgroundService
     {

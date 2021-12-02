@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Jenner.Agendamento.API.Services;
+﻿using Jenner.Agendamento.API.Services;
 using Jenner.Comum.Models;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -14,14 +13,12 @@ namespace Jenner.Agendamento.API.Controllers
     public class AgendamentoController : ControllerBase
     {
         private readonly ISender sender;
-        private readonly IMapper _mapper;
 
         private CancellationToken Token => HttpContext?.RequestAborted ?? default;
 
-        public AgendamentoController(ISender sender, IMapper mapper)
+        public AgendamentoController(ISender sender)
         {
             this.sender = sender ?? throw new System.ArgumentNullException(nameof(sender));
-            _mapper = mapper ?? throw new System.ArgumentNullException(nameof(mapper));
         }
 
         [HttpPost]

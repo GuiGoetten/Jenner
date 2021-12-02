@@ -1,7 +1,7 @@
 ﻿using CloudNative.CloudEvents;
 using Confluent.Kafka;
-using Jenner.Agendamento.API.Data;
-using Jenner.Agendamento.API.Providers;
+using Jenner.Aplicacao.API.Data;
+using Jenner.Aplicacao.API.Providers;
 using Jenner.Comum;
 using Jenner.Comum.Models;
 using MediatR;
