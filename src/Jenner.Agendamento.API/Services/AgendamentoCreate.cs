@@ -4,6 +4,7 @@ using Jenner.Agendamento.API.Data;
 using Jenner.Agendamento.API.Providers;
 using Jenner.Comum;
 using Jenner.Comum.Models;
+using Jenner.Comum.Models.Validators;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
@@ -38,12 +39,14 @@ namespace Jenner.Agendamento.API.Services
 
         public async Task<Aplicacao> Handle(AgendamentoCreate request, CancellationToken cancellationToken)
         {
+            Aplicacao aplicacaoAgendada = new(request.Cpf, request.NomePessoa, request.NomeVacina, request.Dose, request.DataAgendamento, null);
+
+            aplicacaoAgendada.ValidaAgendamento();
 
             Carteira carteiraResult = await MongoDatabase
                 .GetCarteiraCollection()
                 .FindOrCreateAsync(request.Cpf, request.NomePessoa, request.DataNascimento, cancellationToken);
 
-            Aplicacao aplicacaoAgendada = new(carteiraResult.Cpf, carteiraResult.NomePessoa, request.NomeVacina, request.Dose, request.DataAgendamento, null);
 
             carteiraResult = carteiraResult.AddAplicacao(aplicacaoAgendada);
 
@@ -68,5 +71,6 @@ namespace Jenner.Agendamento.API.Services
 
             return await Task.FromResult(aplicacaoAgendada);
         }
+
     }
 }
