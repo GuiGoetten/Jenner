@@ -4,6 +4,7 @@ using Jenner.Aplicacao.API.Data;
 using Jenner.Aplicacao.API.Providers;
 using Jenner.Comum;
 using Jenner.Comum.Models;
+using Jenner.Comum.Models.Validators;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
@@ -21,7 +22,7 @@ namespace Jenner.Aplicacao.API.Services
         public string NomeVacina { get; set; }
         public int Dose { get; set; }
         public DateTime DataAgendamento { get; set; }
-        public DateTime DataAplicada { get; set; }
+        public DateTime? DataAplicada { get; set; }
     }
 
     public class AplicacaoCreateHandler : KafkaPublisherBase, IRequestHandler<AplicacaoCreate, Comum.Models.Aplicacao>
@@ -39,11 +40,16 @@ namespace Jenner.Aplicacao.API.Services
         public async Task<Comum.Models.Aplicacao> Handle(AplicacaoCreate request, CancellationToken cancellationToken)
         {
 
+            //Comum.Models.Aplicacao aplicacaoAgendada = new(request.Cpf, request.NomePessoa, request.NomeVacina, request.Dose, request.DataAgendamento, request.DataAplicada);
+
+
             Carteira carteiraResult = await MongoDatabase
                 .GetCarteiraCollection()
                 .FindOrCreateAsync(request.Cpf, request.NomePessoa, request.DataNascimento, cancellationToken);
 
             Comum.Models.Aplicacao aplicacaoAplicada = new(carteiraResult.Cpf, carteiraResult.NomePessoa, request.NomeVacina, request.Dose, request.DataAgendamento, request.DataAplicada);
+
+            aplicacaoAplicada.ValidaAplicacao();
 
             carteiraResult = carteiraResult.AddAplicacao(aplicacaoAplicada);
 

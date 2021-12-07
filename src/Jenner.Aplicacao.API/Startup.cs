@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft;
 using Jenner.Comum;
 //using Jenner.Comum;
 

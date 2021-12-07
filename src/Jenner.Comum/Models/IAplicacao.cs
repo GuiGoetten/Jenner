@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Text.Json.Serialization;
 
 namespace Jenner.Comum.Models
 {
@@ -12,4 +14,5 @@ namespace Jenner.Comum.Models
         public DateTime? DataAplicacao { get; }
 
     }
+
 }

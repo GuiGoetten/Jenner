@@ -25,9 +25,18 @@ namespace Jenner.Aplicacao.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Create([FromBody] AplicacaoCreate novaAplicacao)
         {
-            Comum.Models.Aplicacao result = await sender.Send(novaAplicacao);
+            Comum.Models.Aplicacao result;
+            try
+            {
+               result = await sender.Send(novaAplicacao);
+            }
+            catch (System.Exception e)
+            {
+                return BadRequest(e.Message);
+            }
 
             return Ok(result);
+
             
             //TODO: Arrumar o retorno, para retornar um 201 quando criado com sucesso + o objeto criado com o ID correto
             //return CreatedAtAction(nameof(Aplicacao), result);
