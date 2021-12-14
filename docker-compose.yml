@@ -24,3 +24,9 @@ services:
     build:
       context: .
       dockerfile: src/Jenner.Aplicacao.API/Dockerfile
+
+  Jenner.Carteira.API:
+    image: ${DOCKER_REGISTRY-}jennercarteiraapi
+    build:
+      context: .
+      dockerfile: src/Jenner.Carteira.API/Dockerfile

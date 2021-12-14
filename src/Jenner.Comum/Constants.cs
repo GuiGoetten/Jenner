@@ -15,6 +15,8 @@ namespace Jenner.Comum
 
         public const string MongoAplicacaoDatabase = @"jenner";
 
+        public const string MongoCarteiraDatabase = @"jenner";
+
         public static class CloudEvents
         {
             public const string AgendadaTopic = "Vacinacao.Agendada";
