@@ -7,13 +7,11 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jenner.Comum", "src\Jenner.Comum\Jenner.Comum.csproj", "{50CE9879-423C-4EFE-90CB-23E62CF6FEF2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jenner.Consultar.API", "src\Jenner.Consultar.API\Jenner.Consultar.API.csproj", "{A9590A4C-91F5-4235-8394-6E120676F3B1}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jenner.Consultar.Worker", "src\Jenner.Consultar.Worker\Jenner.Consultar.Worker.csproj", "{F65C0B4A-3E5F-427E-A7CE-277D1AF40AE8}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jenner.Agendamento.API", "src\Jenner.Agendamento.API\Jenner.Agendamento.API.csproj", "{A8201CB1-91E6-4610-ADAD-528A74CA5FA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jenner.Aplicacao.API", "src\Jenner.Aplicacao.API\Jenner.Aplicacao.API.csproj", "{B67C47EE-42DF-49E0-873E-7A2DABC839BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jenner.Aplicacao.API", "src\Jenner.Aplicacao.API\Jenner.Aplicacao.API.csproj", "{B67C47EE-42DF-49E0-873E-7A2DABC839BB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jenner.Carteira.API", "src\Jenner.Carteira.API\Jenner.Carteira.API.csproj", "{D2AE7D75-CBFD-4E5F-A86A-944ACC644D15}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,14 +27,6 @@ Global
 		{50CE9879-423C-4EFE-90CB-23E62CF6FEF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50CE9879-423C-4EFE-90CB-23E62CF6FEF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50CE9879-423C-4EFE-90CB-23E62CF6FEF2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A9590A4C-91F5-4235-8394-6E120676F3B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A9590A4C-91F5-4235-8394-6E120676F3B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A9590A4C-91F5-4235-8394-6E120676F3B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A9590A4C-91F5-4235-8394-6E120676F3B1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F65C0B4A-3E5F-427E-A7CE-277D1AF40AE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F65C0B4A-3E5F-427E-A7CE-277D1AF40AE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F65C0B4A-3E5F-427E-A7CE-277D1AF40AE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F65C0B4A-3E5F-427E-A7CE-277D1AF40AE8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A8201CB1-91E6-4610-ADAD-528A74CA5FA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A8201CB1-91E6-4610-ADAD-528A74CA5FA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8201CB1-91E6-4610-ADAD-528A74CA5FA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,6 +35,10 @@ Global
 		{B67C47EE-42DF-49E0-873E-7A2DABC839BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B67C47EE-42DF-49E0-873E-7A2DABC839BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B67C47EE-42DF-49E0-873E-7A2DABC839BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2AE7D75-CBFD-4E5F-A86A-944ACC644D15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2AE7D75-CBFD-4E5F-A86A-944ACC644D15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2AE7D75-CBFD-4E5F-A86A-944ACC644D15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2AE7D75-CBFD-4E5F-A86A-944ACC644D15}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
