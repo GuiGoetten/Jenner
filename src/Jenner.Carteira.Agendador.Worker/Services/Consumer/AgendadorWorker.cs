@@ -1,7 +1,7 @@
 ﻿using CloudNative.CloudEvents.Kafka;
 using CloudNative.CloudEvents.SystemTextJson;
 using Confluent.Kafka;
-using Jenner.Aplicacao.API.Providers;
+using Jenner.Carteira.Agendador.Worker.Providers;
 using Jenner.Comum;
 using MediatR;
 using System;
@@ -10,19 +10,20 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Jenner.Aplicacao.API.Services.Consumer
+namespace Jenner.Carteira.Agendador.Worker.Services.Consumer
 {
-    public class AplicacaoWorker : KafkaConsumerBase
+    public class AgendadorWorker : KafkaConsumerBase
     {
+
         public ISender sender;
-        public AplicacaoWorker(IServiceProvider serviceProvider, ISender sender) :
-            base(serviceProvider, new JsonEventFormatter<string>())
+        public AgendadorWorker(IServiceProvider serviceProvider, ISender sender) : base(serviceProvider, new JsonEventFormatter<string>())
         {
             this.sender = sender ?? throw new ArgumentNullException(nameof(sender));
         }
 
         protected override async Task DoScopedAsync(CancellationToken cancellationToken)
         {
+            Console.WriteLine("Teste");
             if (KafkaConsumer is null)
             {
                 throw new ArgumentException("For some reason the Consumer is null, this shouldn't happen.");
@@ -34,17 +35,30 @@ namespace Jenner.Aplicacao.API.Services.Consumer
             {
                 try
                 {
+                    //TODO: Pra retirar depois
+                    Console.WriteLine("Ouvindo...");
+
+
                     ConsumeResult<string, byte[]> result = KafkaConsumer.Consume(cancellationToken);
                     var cloudEvent = result.Message.ToCloudEvent(cloudEventFormatter);
-                    if (cloudEvent.Data is AplicacaoCreate mensagem)
+                    if (cloudEvent.Data is Comum.Models.Carteira mensagem)
                     {
                         try
                         {
-                            await sender.Send(cloudEvent.Data as AplicacaoCreate);
+                            CarteiraCreate carteiraCreate = new CarteiraCreate
+                            {
+                                Id = mensagem.Id,
+                                Cpf = mensagem.Cpf,
+                                NomePessoa = mensagem.NomePessoa,
+                                DataNascimento = mensagem.DataNascimento,
+                                UltimaAplicacao = mensagem.GetLatestAplicacao()
+                            };
+
+                            await sender.Send(carteiraCreate, cancellationToken);
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine($"Não recebi uma aplicacao {e.Message}");
+                            Console.WriteLine($"Não rescebi uma aplicacao {e.Message}");
                         }
                     }
                 }
@@ -62,6 +76,5 @@ namespace Jenner.Aplicacao.API.Services.Consumer
                 }
             }
         }
-
     }
 }

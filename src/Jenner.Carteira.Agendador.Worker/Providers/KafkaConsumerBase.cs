@@ -1,21 +1,21 @@
-using CloudNative.CloudEvents;
-using CloudNative.CloudEvents.SystemTextJson;
+﻿using CloudNative.CloudEvents;
 using Confluent.Kafka;
+using CloudNative.CloudEvents.SystemTextJson;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Jenner.Consultar.Worker
+namespace Jenner.Carteira.Agendador.Worker.Providers
 {
-    public abstract class ConsumeWorker : BackgroundService
+    public abstract class KafkaConsumerBase : BackgroundService
     {
         protected readonly IServiceProvider serviceProvider;
         protected readonly CloudEventFormatter cloudEventFormatter;
         protected IConsumer<string, byte[]> KafkaConsumer { get; private set; } = null;
 
-        public ConsumeWorker(
+        public KafkaConsumerBase(
             IServiceProvider serviceProvider,
             CloudEventFormatter formatter = null)
         {
@@ -25,7 +25,7 @@ namespace Jenner.Consultar.Worker
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            
+
             KafkaConsumer = serviceProvider
                 .CreateScope().ServiceProvider
                 .GetRequiredService<IConsumer<string, byte[]>>();

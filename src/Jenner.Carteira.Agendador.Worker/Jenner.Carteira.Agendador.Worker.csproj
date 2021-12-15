@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>dotnet-Jenner.Carteira.Agendador.Worker-BB895A74-7C90-4483-9C15-7F509FB4B413</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CloudNative.CloudEvents" Version="2.1.1" />
+    <PackageReference Include="CloudNative.CloudEvents.Kafka" Version="2.1.1" />
+    <PackageReference Include="CloudNative.CloudEvents.SystemTextJson" Version="2.1.1" />
+    <PackageReference Include="Confluent.Kafka" Version="1.8.2" />
+    <PackageReference Include="MediatR" Version="9.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.11.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Jenner.Comum\Jenner.Comum.csproj" />
+  </ItemGroup>
+</Project>
