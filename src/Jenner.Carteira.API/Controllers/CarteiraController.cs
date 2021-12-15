@@ -29,7 +29,7 @@ namespace Jenner.Carteira.API.Controllers
             Comum.Models.Carteira result;
             try
             {
-               result = await sender.Send(novaCarteira);
+                result = await sender.Send(novaCarteira);
             }
             catch (System.Exception e)
             {
@@ -38,7 +38,7 @@ namespace Jenner.Carteira.API.Controllers
 
             return Ok(result);
 
-            
+
             //TODO: Arrumar o retorno, para retornar um 201 quando criado com sucesso + o objeto criado com o ID correto
             //return CreatedAtAction(nameof(Aplicacao), result);
         }
@@ -48,6 +48,14 @@ namespace Jenner.Carteira.API.Controllers
         public async Task<IActionResult> ListAll()
         {
             IEnumerable<Comum.Models.Carteira> result = await sender.Send(new CarteiraList(), Token);
+            return Ok(result);
+        }
+
+        [HttpGet("cpf/{cpf}/nome/{nome}", Name = "Lista Carteira Unica")]
+        [ProducesResponseType(typeof(IEnumerable<Comum.Models.Carteira>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> ListOne(string cpf, string nome)
+        {
+            IEnumerable<Comum.Models.Carteira> result = await sender.Send(new CarteiraSingle{Cpf = cpf, NomePessoa = nome }, Token);
             return Ok(result);
         }
 

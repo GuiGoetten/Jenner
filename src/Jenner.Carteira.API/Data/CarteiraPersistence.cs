@@ -103,6 +103,12 @@ namespace Jenner.Carteira.API.Data
             List<CarteiraPersistence> mongoResults = await collection.Find(_ => true).ToListAsync(cancellationToken);
             return mongoResults.Select(r => r.ToCarteira());
         }
+
+        public static async Task<IEnumerable<Comum.Models.Carteira>> GetOneAsync(this IMongoCollection<CarteiraPersistence> collection, string cpf, string nomePessoa, CancellationToken cancellationToken = default)
+        {
+            List<CarteiraPersistence> mongoResults = await collection.Find(c => c.Cpf.Equals(cpf) && c.NomePessoa.Equals(nomePessoa)).ToListAsync(cancellationToken);
+            return mongoResults.Select(r => r.ToCarteira());
+        }
     }
 
 }

@@ -1,18 +1,6 @@
 version: '3.4'
 
 services:
-  Jenner.Consultar.Worker:
-    image: ${DOCKER_REGISTRY-}jennerconsultarworker
-    build:
-      context: .
-      dockerfile: src/Jenner.Consultar.Worker/Dockerfile
-
-  Jenner.Consultar.API:
-    image: ${DOCKER_REGISTRY-}jennerconsultarapi
-    build:
-      context: .
-      dockerfile: src/Jenner.Consultar.API/Dockerfile
-
   Jenner.Agendamento.API:
     image: ${DOCKER_REGISTRY-}jenneragendamentoapi
     build:
