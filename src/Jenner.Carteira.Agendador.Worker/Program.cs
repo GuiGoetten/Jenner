@@ -58,7 +58,7 @@ namespace Jenner.Carteira.Agendador.Worker
             {
                 var config = new ConsumerConfig
                 {
-                    BootstrapServers = configuration.GetConnectionString("kafka:29092"),
+                    BootstrapServers = configuration.GetConnectionString(@"KafkaBootstrap"),
                     GroupId = "agendador-worker",
                     AutoOffsetReset = AutoOffsetReset.Earliest
                 };

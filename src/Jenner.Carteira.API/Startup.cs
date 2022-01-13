@@ -43,7 +43,7 @@ namespace Jenner.Carteira.API
             {
                 var config = new ConsumerConfig
                 {
-                    BootstrapServers = Configuration.GetConnectionString("kafka:29092"),
+                    BootstrapServers = Configuration.GetConnectionString(@"KafkaBootstrap"),
                     GroupId = "carteira-worker",
                     AutoOffsetReset = AutoOffsetReset.Earliest
                 };

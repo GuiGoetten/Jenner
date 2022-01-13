@@ -45,7 +45,7 @@ namespace Jenner.Aplicacao.API
             {
                 var config = new ConsumerConfig
                 {
-                    BootstrapServers = Configuration.GetConnectionString("kafka:29092"),
+                    BootstrapServers = Configuration.GetConnectionString(@"KafkaBootstrap"),
                     GroupId = "agendar-worker",
                     AutoOffsetReset = AutoOffsetReset.Earliest
                 };
