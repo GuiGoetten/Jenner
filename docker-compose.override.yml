@@ -20,10 +20,14 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:imroot@mongo.db:27017/
+    depends_on:
+      - mongo.db
 
 
   zookeeper:
       image: confluentinc/cp-zookeeper:latest
+      tmpfs:
+        - "/datalog"
       ports:
       - 2181:2181
       environment:
@@ -33,6 +37,7 @@ services:
   kafka:
     container_name: kafka
     image: confluentinc/cp-kafka:latest
+    restart: always
     depends_on:
       - zookeeper
     ports:
@@ -47,23 +52,26 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     
 
-  init-kafka:
-    image: confluentinc/cp-kafka:6.1.1
-    depends_on:
-      - kafka
-    entrypoint: [ '/bin/sh', '-c' ]
-    command: |
-        "
-        # blocks until kafka is reachable
-        kafka-topics --bootstrap-server kafka:29092 --list
+  #init-kafka:
+  #  image: confluentinc/cp-kafka:6.1.1
+  #  depends_on:
+  #    - kafka
+  #  entrypoint: [ '/bin/sh', '-c' ]
+  #  command: |
+  #      "
+  #      # blocks until kafka is reachable
+  #      kafka-topics --bootstrap-server kafka:29092 --list
 
-        echo -e 'Creating kafka topics'
-              kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic Vacinacao.Agendada && \
-              kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic Vacinacao.Agendar && \
+  #      echo -e 'Creating kafka topics'
+  #            kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic Vacinacao.Agendada && \
+  #            kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic Vacinacao.Agendar && \
+  #            kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic Vacinacao.Aplicada && \
+  #            kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic Vacinacao.Agendar && \
+  #            kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic Vacinacao.Aplicar && \
 
-        echo -e 'Successfully created the following topics:'
-        kafka-topics --bootstrap-server kafka:29092 --list
-        "
+  #      echo -e 'Successfully created the following topics:'
+  #      kafka-topics --bootstrap-server kafka:29092 --list
+  #      "
 
   kafdrop:
     container_name: kafka-gui
@@ -88,7 +96,10 @@ services:
     volumes:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-
+    depends_on:
+      - kafka
+      - zookeeper
+      - mongo.db
 
   Jenner.Aplicacao.API:
     environment:
@@ -101,6 +112,20 @@ services:
     volumes:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+    depends_on:
+      - kafka
+      - zookeeper
+      - mongo.db
+
+  Jenner.Carteira.Agendador.Worker:
+    environment:
+      - ConnectionStrings__KafkaBootstrap=kafka:29092
+      - ConnectionStrings__MongoDb=mongodb://root:imroot@mongo.db:27017/
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - kafka
+      - zookeeper
+      - mongo.db
 
   Jenner.Carteira.API:
     environment:
@@ -113,3 +138,7 @@ services:
     volumes:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+    depends_on:
+      - kafka
+      - zookeeper
+      - mongo.db

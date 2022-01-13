@@ -1,6 +1,7 @@
 using CloudNative.CloudEvents;
 using CloudNative.CloudEvents.SystemTextJson;
 using Confluent.Kafka;
+using Jenner.Carteira.API.Services.Consumer;
 using Jenner.Comum;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -48,6 +49,8 @@ namespace Jenner.Carteira.API
                 };
                 return new ConsumerBuilder<string, byte[]>(config).Build();
             });
+
+            services.AddHostedService<CarteiraWorker>();
         }
 
         private void AddKafkaServices(IServiceCollection services)

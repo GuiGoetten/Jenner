@@ -38,11 +38,21 @@ namespace Jenner.Agendamento.API.Services.Consumer
                     
                     var cloudEvent = result.Message.ToCloudEvent(cloudEventFormatter);
 
-                    if (cloudEvent.Data is AgendamentoCreate mensagem)
+                    if (cloudEvent.Data is Carteira carteira)
                     {
                         try 
                         {
-                            await sender.Send(cloudEvent.Data as AgendamentoCreate, cancellationToken);
+                            AgendamentoCreate novoAgendamento = new AgendamentoCreate
+                            {
+                                Cpf = carteira.Cpf,
+                                NomePessoa = carteira.NomePessoa,
+                                DataNascimento = carteira.DataNascimento,
+                                DataAgendamento = carteira.GetLatestAplicacao().DataAgendamento,
+                                NomeVacina = carteira.GetLatestAplicacao().NomeVacina,
+                                Dose = carteira.GetLatestAplicacao().Dose
+                            };
+
+                            await sender.Send(novoAgendamento, cancellationToken);
                         }
                         catch (Exception e)
                         {

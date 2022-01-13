@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jenner.Aplicacao.API", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jenner.Carteira.API", "src\Jenner.Carteira.API\Jenner.Carteira.API.csproj", "{D2AE7D75-CBFD-4E5F-A86A-944ACC644D15}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jenner.Carteira.Agendador.Worker", "src\Jenner.Carteira.Agendador.Worker\Jenner.Carteira.Agendador.Worker.csproj", "{F30F0574-FCDF-4A0E-9237-CE5576662BA8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{D2AE7D75-CBFD-4E5F-A86A-944ACC644D15}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2AE7D75-CBFD-4E5F-A86A-944ACC644D15}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2AE7D75-CBFD-4E5F-A86A-944ACC644D15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F30F0574-FCDF-4A0E-9237-CE5576662BA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F30F0574-FCDF-4A0E-9237-CE5576662BA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F30F0574-FCDF-4A0E-9237-CE5576662BA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F30F0574-FCDF-4A0E-9237-CE5576662BA8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

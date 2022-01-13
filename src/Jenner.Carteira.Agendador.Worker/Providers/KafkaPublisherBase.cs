@@ -5,9 +5,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Jenner.Aplicacao.API.Providers
+namespace Jenner.Carteira.Agendador.Worker.Providers
 {
-
     public class KafkaPublisherBase
     {
         private readonly IProducer<string, byte[]> producer;
@@ -23,7 +22,7 @@ namespace Jenner.Aplicacao.API.Providers
         /// <param name="topic"></param>
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
-        public KafkaPublisherBase( IProducer<string, byte[]> producer, CloudEventFormatter cloudEventFormatter, string topic)
+        public KafkaPublisherBase(IProducer<string, byte[]> producer, CloudEventFormatter cloudEventFormatter, string topic)
         {
             if (string.IsNullOrEmpty(topic))
             {
@@ -41,9 +40,9 @@ namespace Jenner.Aplicacao.API.Providers
             try
             {
                 var result = producer.ProduceAsync(
-                            topic,
-                            cloudEvent.ToKafkaMessage(ContentMode.Structured, cloudEventFormatter),
-                            cancellationToken);
+                        topic,
+                        cloudEvent.ToKafkaMessage(ContentMode.Structured, cloudEventFormatter),
+                        cancellationToken);
                 return result;
             }
             catch

@@ -13,6 +13,12 @@ services:
       context: .
       dockerfile: src/Jenner.Aplicacao.API/Dockerfile
 
+  Jenner.Carteira.Agendador.Worker:
+    image: ${DOCKER_REGISTRY-}jennercarteiraagendadorworker
+    build:
+      context: .
+      dockerfile: src/Jenner.Carteira.Agendador.Worker/Dockerfile
+      
   Jenner.Carteira.API:
     image: ${DOCKER_REGISTRY-}jennercarteiraapi
     build:

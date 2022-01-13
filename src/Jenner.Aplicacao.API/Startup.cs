@@ -9,10 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
-using Microsoft.AspNetCore.Http;
-using Newtonsoft;
 using Jenner.Comum;
-//using Jenner.Comum;
+using Jenner.Aplicacao.API.Services.Consumer;
 
 namespace Jenner.Aplicacao.API
 {
@@ -54,7 +52,7 @@ namespace Jenner.Aplicacao.API
                 return new ConsumerBuilder<string, byte[]>(config).Build();
             });
 
-            //services.AddHostedService<AgendarWorker>();
+            services.AddHostedService<AplicacaoWorker>();
         }
 
         private void AddKafkaServices(IServiceCollection services)

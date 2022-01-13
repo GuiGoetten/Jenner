@@ -5,8 +5,6 @@ using Jenner.Aplicacao.API.Providers;
 using Jenner.Comum;
 using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,22 +21,17 @@ namespace Jenner.Aplicacao.API.Services.Consumer
 
         protected override async Task DoScopedAsync(CancellationToken cancellationToken)
         {
-            Console.WriteLine("Teste");
             if (KafkaConsumer is null)
             {
                 throw new ArgumentException("For some reason the Consumer is null, this shouldn't happen.");
             }
 
-            KafkaConsumer.Subscribe(Constants.CloudEvents.AplicadaTopic);
+            KafkaConsumer.Subscribe(Constants.CloudEvents.AplicarTopic);
 
             while (!cancellationToken.IsCancellationRequested)
             {
                 try
                 {
-                    //TODO: Pra retirar depois
-                    Console.WriteLine("Ouvindo...");
-
-
                     ConsumeResult<string, byte[]> result = KafkaConsumer.Consume(cancellationToken);
                     var cloudEvent = result.Message.ToCloudEvent(cloudEventFormatter);
                     if (cloudEvent.Data is AplicacaoCreate mensagem)
@@ -49,7 +42,7 @@ namespace Jenner.Aplicacao.API.Services.Consumer
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine($"Não rescebi uma aplicacao {e.Message}");
+                            Console.WriteLine($"Não recebi uma aplicacao {e.Message}");
                         }
                     }
                 }

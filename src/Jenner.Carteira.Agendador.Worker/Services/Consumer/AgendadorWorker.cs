@@ -1,20 +1,22 @@
 ﻿using CloudNative.CloudEvents.Kafka;
 using CloudNative.CloudEvents.SystemTextJson;
 using Confluent.Kafka;
-using Jenner.Carteira.API.Providers;
+using Jenner.Carteira.Agendador.Worker.Providers;
 using Jenner.Comum;
 using MediatR;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Jenner.Carteira.API.Services.Consumer
+namespace Jenner.Carteira.Agendador.Worker.Services.Consumer
 {
-    public class CarteiraWorker : KafkaConsumerBase
+    public class AgendadorWorker : KafkaConsumerBase
     {
+
         public ISender sender;
-        public CarteiraWorker(IServiceProvider serviceProvider, ISender sender) :
-            base(serviceProvider, new JsonEventFormatter<string>())
+        public AgendadorWorker(IServiceProvider serviceProvider, ISender sender) : base(serviceProvider, new JsonEventFormatter<string>())
         {
             this.sender = sender ?? throw new ArgumentNullException(nameof(sender));
         }
@@ -27,28 +29,48 @@ namespace Jenner.Carteira.API.Services.Consumer
                 throw new ArgumentException("For some reason the Consumer is null, this shouldn't happen.");
             }
 
-            KafkaConsumer.Subscribe(Constants.CloudEvents.AgendadaTopic);
+            KafkaConsumer.Subscribe(Constants.CloudEvents.AplicadaTopic);
 
             while (!cancellationToken.IsCancellationRequested)
             {
                 try
                 {
                     //TODO: Pra retirar depois
-                    Console.WriteLine("Ouvindo...");
-
+                    Console.WriteLine("Ouvindo minha benga...");
+                    Console.WriteLine(cancellationToken.IsCancellationRequested); 
 
                     ConsumeResult<string, byte[]> result = KafkaConsumer.Consume(cancellationToken);
+                    Console.WriteLine("Ouvindo o consume...");
+
                     var cloudEvent = result.Message.ToCloudEvent(cloudEventFormatter);
-                    if (cloudEvent.Data is CarteiraCreate mensagem)
+                    Console.WriteLine("cloudevent...");
+
+                    if (cloudEvent.Data is Comum.Models.Carteira mensagem)
                     {
+                        Console.WriteLine("É uma carteira...");
                         try
                         {
-                            await sender.Send(cloudEvent.Data as CarteiraCreate);
+                            Console.WriteLine("Vamo criar povo...");
+                            CarteiraCreate carteiraCreate = new CarteiraCreate
+                            {
+                                Id = mensagem.Id,
+                                Cpf = mensagem.Cpf,
+                                NomePessoa = mensagem.NomePessoa,
+                                DataNascimento = mensagem.DataNascimento,
+                                UltimaAplicacao = mensagem.GetLatestAplicacao()
+                            };
+                            Console.WriteLine("DEU BOA...");
+
+                            await sender.Send(carteiraCreate, cancellationToken);
                         }
                         catch (Exception e)
                         {
                             Console.WriteLine($"Não rescebi uma aplicacao {e.Message}");
                         }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Não é uma carteira...");
                     }
                 }
                 catch (ConsumeException e)
@@ -64,7 +86,8 @@ namespace Jenner.Carteira.API.Services.Consumer
                     await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
                 }
             }
-        }
+            Console.WriteLine("SAI DO WHILE...");
 
+        }
     }
 }
