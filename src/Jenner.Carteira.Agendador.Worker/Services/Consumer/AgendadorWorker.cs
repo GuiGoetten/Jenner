@@ -36,15 +36,21 @@ namespace Jenner.Carteira.Agendador.Worker.Services.Consumer
                 try
                 {
                     //TODO: Pra retirar depois
-                    Console.WriteLine("Ouvindo...");
-
+                    Console.WriteLine("Ouvindo minha benga...");
+                    Console.WriteLine(cancellationToken.IsCancellationRequested); 
 
                     ConsumeResult<string, byte[]> result = KafkaConsumer.Consume(cancellationToken);
+                    Console.WriteLine("Ouvindo o consume...");
+
                     var cloudEvent = result.Message.ToCloudEvent(cloudEventFormatter);
+                    Console.WriteLine("cloudevent...");
+
                     if (cloudEvent.Data is Comum.Models.Carteira mensagem)
                     {
+                        Console.WriteLine("É uma carteira...");
                         try
                         {
+                            Console.WriteLine("Vamo criar povo...");
                             CarteiraCreate carteiraCreate = new CarteiraCreate
                             {
                                 Id = mensagem.Id,
@@ -53,6 +59,7 @@ namespace Jenner.Carteira.Agendador.Worker.Services.Consumer
                                 DataNascimento = mensagem.DataNascimento,
                                 UltimaAplicacao = mensagem.GetLatestAplicacao()
                             };
+                            Console.WriteLine("DEU BOA...");
 
                             await sender.Send(carteiraCreate, cancellationToken);
                         }
@@ -60,6 +67,10 @@ namespace Jenner.Carteira.Agendador.Worker.Services.Consumer
                         {
                             Console.WriteLine($"Não rescebi uma aplicacao {e.Message}");
                         }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Não é uma carteira...");
                     }
                 }
                 catch (ConsumeException e)
@@ -75,6 +86,8 @@ namespace Jenner.Carteira.Agendador.Worker.Services.Consumer
                     await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
                 }
             }
+            Console.WriteLine("SAI DO WHILE...");
+
         }
     }
 }

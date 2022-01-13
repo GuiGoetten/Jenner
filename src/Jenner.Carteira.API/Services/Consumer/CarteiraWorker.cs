@@ -5,8 +5,6 @@ using Jenner.Carteira.API.Providers;
 using Jenner.Comum;
 using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -29,7 +27,7 @@ namespace Jenner.Carteira.API.Services.Consumer
                 throw new ArgumentException("For some reason the Consumer is null, this shouldn't happen.");
             }
 
-            KafkaConsumer.Subscribe(Constants.CloudEvents.AplicadaTopic);
+            KafkaConsumer.Subscribe(Constants.CloudEvents.AgendadaTopic);
 
             while (!cancellationToken.IsCancellationRequested)
             {

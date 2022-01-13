@@ -1,6 +1,7 @@
 using CloudNative.CloudEvents;
 using CloudNative.CloudEvents.SystemTextJson;
 using Confluent.Kafka;
+using Jenner.Carteira.Agendador.Worker.Services.Consumer;
 using Jenner.Comum;
 using MediatR;
 using Microsoft.Extensions.Configuration;
@@ -31,6 +32,8 @@ namespace Jenner.Carteira.Agendador.Worker
                     AddMongoServices(services, configuration);
 
                     services.AddMediatR(Assembly.GetExecutingAssembly());
+
+                    services.AddHostedService<AgendadorWorker>();
                 });
 
 
@@ -55,7 +58,7 @@ namespace Jenner.Carteira.Agendador.Worker
             {
                 var config = new ConsumerConfig
                 {
-                    BootstrapServers = configuration.GetConnectionString(@"KafkaBootstrap"),
+                    BootstrapServers = configuration.GetConnectionString("kafka:29092"),
                     GroupId = "agendador-worker",
                     AutoOffsetReset = AutoOffsetReset.Earliest
                 };

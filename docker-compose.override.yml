@@ -47,23 +47,26 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     
 
-  init-kafka:
-    image: confluentinc/cp-kafka:6.1.1
-    depends_on:
-      - kafka
-    entrypoint: [ '/bin/sh', '-c' ]
-    command: |
-        "
-        # blocks until kafka is reachable
-        kafka-topics --bootstrap-server kafka:29092 --list
+  #init-kafka:
+  #  image: confluentinc/cp-kafka:6.1.1
+  #  depends_on:
+  #    - kafka
+  #  entrypoint: [ '/bin/sh', '-c' ]
+  #  command: |
+  #      "
+  #      # blocks until kafka is reachable
+  #      kafka-topics --bootstrap-server kafka:29092 --list
 
-        echo -e 'Creating kafka topics'
-              kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic Vacinacao.Agendada && \
-              kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic Vacinacao.Agendar && \
+  #      echo -e 'Creating kafka topics'
+  #            kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic Vacinacao.Agendada && \
+  #            kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic Vacinacao.Agendar && \
+  #            kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic Vacinacao.Aplicada && \
+  #            kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic Vacinacao.Agendar && \
+  #            kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic Vacinacao.Aplicar && \
 
-        echo -e 'Successfully created the following topics:'
-        kafka-topics --bootstrap-server kafka:29092 --list
-        "
+  #      echo -e 'Successfully created the following topics:'
+  #      kafka-topics --bootstrap-server kafka:29092 --list
+  #      "
 
   kafdrop:
     container_name: kafka-gui

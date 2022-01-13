@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using Jenner.Comum;
+using Jenner.Aplicacao.API.Services.Consumer;
 
 namespace Jenner.Aplicacao.API
 {
@@ -44,14 +45,14 @@ namespace Jenner.Aplicacao.API
             {
                 var config = new ConsumerConfig
                 {
-                    BootstrapServers = Configuration.GetConnectionString(@"KafkaBootstrap"),
+                    BootstrapServers = Configuration.GetConnectionString("kafka:29092"),
                     GroupId = "agendar-worker",
                     AutoOffsetReset = AutoOffsetReset.Earliest
                 };
                 return new ConsumerBuilder<string, byte[]>(config).Build();
             });
 
-            //services.AddHostedService<AgendarWorker>();
+            services.AddHostedService<AplicacaoWorker>();
         }
 
         private void AddKafkaServices(IServiceCollection services)

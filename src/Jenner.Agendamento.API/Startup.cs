@@ -42,9 +42,10 @@ namespace Jenner.Agendamento.API
             {
                 var config = new ConsumerConfig
                 {
-                    BootstrapServers = Configuration.GetConnectionString(@"KafkaBootstrap"),
+                    BootstrapServers = Configuration.GetConnectionString("kafka:29092"),
                     GroupId = "agendar-worker",
-                    AutoOffsetReset = AutoOffsetReset.Earliest
+                    AutoOffsetReset = AutoOffsetReset.Earliest,
+                    AllowAutoCreateTopics = true
                 };
                 return new ConsumerBuilder<string, byte[]>(config).Build();
             });

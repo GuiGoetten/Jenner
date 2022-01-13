@@ -23,13 +23,18 @@ namespace Jenner.Carteira.Agendador.Worker.Providers
             cloudEventFormatter = formatter ?? new JsonEventFormatter();
         }
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            Console.WriteLine("Estou executando assincronamente");
 
             KafkaConsumer = serviceProvider
                 .CreateScope().ServiceProvider
                 .GetRequiredService<IConsumer<string, byte[]>>();
-            return Task.Run(() => DoScopedAsync(stoppingToken), stoppingToken);  // TALVEZ PRECISE MUDAR AQUI
+
+            Console.WriteLine("Fiz as coisas nada a ve");
+
+            await Task.Run(() => DoScopedAsync(stoppingToken), stoppingToken);  // TALVEZ PRECISE MUDAR AQUI
+
         }
 
         protected abstract Task DoScopedAsync(CancellationToken cancellationToken);
