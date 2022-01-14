@@ -12,7 +12,7 @@ using Jenner.Carteira.Agendador.Worker.Data;
 
 namespace Jenner.Carteira.Agendador.Worker.Services
 {
-    public class CarteiraCreate : IRequest
+    public class CarteiraCreate : IRequest<Unit>
     {
         public Guid Id { get; set; }
         public string Cpf { get; set; }
@@ -21,11 +21,11 @@ namespace Jenner.Carteira.Agendador.Worker.Services
         public Aplicacao UltimaAplicacao { get; set; }
     }
 
-    public class CarteiraCreateHandler : KafkaPublisherBase, IRequestHandler<CarteiraCreate>
+    public class CarteiraCreateHandler : KafkaPublisherBase, IRequestHandler<CarteiraCreate, Unit>
     {
         private readonly IMongoDatabase MongoDatabase;
 
-        public CarteiraCreateHandler(IProducer<string, byte[]> producer, CloudEventFormatter cloudEventFormatter, IMongoDatabase mongoDatabase, CancellationToken cancellationToken) :
+        public CarteiraCreateHandler(IProducer<string, byte[]> producer, CloudEventFormatter cloudEventFormatter, IMongoDatabase mongoDatabase) :
                                                                        base(producer, cloudEventFormatter, Constants.CloudEvents.AgendadaTopic)
         {
             MongoDatabase = mongoDatabase ?? throw new ArgumentNullException(nameof(mongoDatabase));

@@ -31,7 +31,7 @@ namespace Jenner.Carteira.Agendador.Worker
 
                     AddMongoServices(services, configuration);
 
-                    services.AddMediatR(Assembly.GetExecutingAssembly());
+                    services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 
                     services.AddHostedService<AgendadorWorker>();
                 });

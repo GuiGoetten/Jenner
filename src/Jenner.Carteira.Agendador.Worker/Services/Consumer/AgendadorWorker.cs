@@ -3,6 +3,7 @@ using CloudNative.CloudEvents.SystemTextJson;
 using Confluent.Kafka;
 using Jenner.Carteira.Agendador.Worker.Providers;
 using Jenner.Comum;
+using Jenner.Comum.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace Jenner.Carteira.Agendador.Worker.Services.Consumer
     {
 
         public ISender sender;
-        public AgendadorWorker(IServiceProvider serviceProvider, ISender sender) : base(serviceProvider, new JsonEventFormatter<string>())
+        public AgendadorWorker(IServiceProvider serviceProvider,  ISender sender) : base(serviceProvider, new JsonEventFormatter<Comum.Models.Carteira>())
         {
             this.sender = sender ?? throw new ArgumentNullException(nameof(sender));
         }
