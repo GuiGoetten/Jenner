@@ -50,7 +50,7 @@ namespace Jenner.Carteira.API
                 return new ConsumerBuilder<string, byte[]>(config).Build();
             });
 
-            services.AddHostedService<CarteiraWorker>();
+            services.AddHostedService<CarteiraAgendadaWorker>();
         }
 
         private void AddKafkaServices(IServiceCollection services)
