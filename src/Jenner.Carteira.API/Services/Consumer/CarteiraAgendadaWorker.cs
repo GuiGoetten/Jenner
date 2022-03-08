@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace Jenner.Carteira.API.Services.Consumer
 {
-    public class CarteiraWorker : KafkaConsumerBase
+    public class CarteiraAgendadaWorker : KafkaConsumerBase
     {
         public ISender sender;
-        public CarteiraWorker(IServiceProvider serviceProvider, ISender sender) :
+        public CarteiraAgendadaWorker(IServiceProvider serviceProvider, ISender sender) :
             base(serviceProvider, new JsonEventFormatter<string>())
         {
             this.sender = sender ?? throw new ArgumentNullException(nameof(sender));
@@ -21,7 +21,6 @@ namespace Jenner.Carteira.API.Services.Consumer
 
         protected override async Task DoScopedAsync(CancellationToken cancellationToken)
         {
-            Console.WriteLine("Teste");
             if (KafkaConsumer is null)
             {
                 throw new ArgumentException("For some reason the Consumer is null, this shouldn't happen.");
@@ -34,9 +33,6 @@ namespace Jenner.Carteira.API.Services.Consumer
                 try
                 {
                     //TODO: Pra retirar depois
-                    Console.WriteLine("Ouvindo...");
-
-
                     ConsumeResult<string, byte[]> result = KafkaConsumer.Consume(cancellationToken);
                     var cloudEvent = result.Message.ToCloudEvent(cloudEventFormatter);
                     if (cloudEvent.Data is CarteiraCreate mensagem)
@@ -47,7 +43,7 @@ namespace Jenner.Carteira.API.Services.Consumer
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine($"Não rescebi uma aplicacao {e.Message}");
+                            Console.WriteLine($"Não rescebi um agendamento {e.Message}");
                         }
                     }
                 }
