@@ -36,7 +36,7 @@ namespace Jenner.Carteira.Agendador.Worker.Services
             Console.WriteLine("Buscando no banco...");
             Vacina vacinaResult = await MongoDatabase
                                         .GetVacinaCollection()
-                                        .FetchAsync(request.UltimaAplicacao.NomeVacina, cancellationToken);
+                                        .FindOrCreateAsync(request.UltimaAplicacao.NomeVacina, cancellationToken);
 
             if (request.UltimaAplicacao.Dose >= vacinaResult.Doses)
             {

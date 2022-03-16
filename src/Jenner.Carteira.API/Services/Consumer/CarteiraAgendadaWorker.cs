@@ -14,7 +14,7 @@ namespace Jenner.Carteira.API.Services.Consumer
     {
         public ISender sender;
         public CarteiraAgendadaWorker(IServiceProvider serviceProvider, ISender sender) :
-            base(serviceProvider, new JsonEventFormatter<string>())
+            base(serviceProvider, new JsonEventFormatter<Comum.Models.Carteira>())
         {
             this.sender = sender ?? throw new ArgumentNullException(nameof(sender));
         }
@@ -35,11 +35,11 @@ namespace Jenner.Carteira.API.Services.Consumer
                     //TODO: Pra retirar depois
                     ConsumeResult<string, byte[]> result = KafkaConsumer.Consume(cancellationToken);
                     var cloudEvent = result.Message.ToCloudEvent(cloudEventFormatter);
-                    if (cloudEvent.Data is CarteiraCreate mensagem)
+                    if (cloudEvent.Data is Comum.Models.Carteira mensagem)
                     {
                         try
                         {
-                            await sender.Send(cloudEvent.Data as CarteiraCreate);
+                            await sender.Send(cloudEvent.Data as Comum.Models.Carteira);
                         }
                         catch (Exception e)
                         {
