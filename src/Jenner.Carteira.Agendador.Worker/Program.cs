@@ -1,9 +1,9 @@
 using CloudNative.CloudEvents;
 using CloudNative.CloudEvents.SystemTextJson;
 using Confluent.Kafka;
+using MediatR;
 using Jenner.Carteira.Agendador.Worker.Services.Consumer;
 using Jenner.Comum;
-using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

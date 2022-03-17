@@ -72,7 +72,7 @@ namespace Jenner.Agendamento.API
             {
                 return new MongoClient(Configuration.GetConnectionString(Constants.MongoConnectionString));
             });
-            services.AddScoped(sp =>
+            services.AddSingleton(sp =>
             {
                 MongoClient mongoClient = sp.GetRequiredService<MongoClient>();
                 return mongoClient.GetDatabase(Constants.MongoAgendamentoDatabase);

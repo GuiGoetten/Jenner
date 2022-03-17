@@ -43,7 +43,7 @@ namespace Jenner.Carteira.API.Services.Consumer
                         }
                         catch (Exception e)
                         {
-                            Console.WriteLine($"Não rescebi um agendamento {e.Message}");
+                            Console.WriteLine($"Não rexebi um agendamento {e.Message}");
                         }
                     }
                 }
