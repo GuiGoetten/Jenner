@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace Jenner.Carteira.API.Services.Consumer
 {
-    public class CarteiraWorker : KafkaConsumerBase
+    public class CarteiraAplicadaWorker : KafkaConsumerBase
     {
         public ISender sender;
-        public CarteiraWorker(IServiceProvider serviceProvider, ISender sender) :
+        public CarteiraAplicadaWorker(IServiceProvider serviceProvider, ISender sender) :
             base(serviceProvider, new JsonEventFormatter<Comum.Models.Carteira>())
         {
             this.sender = sender ?? throw new ArgumentNullException(nameof(sender));
@@ -48,7 +48,8 @@ namespace Jenner.Carteira.API.Services.Consumer
                                 DataNascimento = mensagem.DataNascimento,
                                 DataAgendamento = mensagem.GetLatestAplicacao().DataAgendamento,
                                 NomeVacina = mensagem.GetLatestAplicacao().NomeVacina,
-                                Dose = mensagem.GetLatestAplicacao().Dose
+                                Dose = mensagem.GetLatestAplicacao().Dose,
+                                DataAplicada = mensagem.GetLatestAplicacao().DataAplicacao
                             };
 
                             await sender.Send(carteiraCreate, cancellationToken);

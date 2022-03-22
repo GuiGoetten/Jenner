@@ -9,7 +9,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Jenner.Carteira.Agendador.Worker.Data;
-using Microsoft.AspNetCore.Http;
 
 namespace Jenner.Carteira.Agendador.Worker.Services
 {

@@ -39,7 +39,18 @@ namespace Jenner.Carteira.API.Services.Consumer
                     {
                         try
                         {
-                            await sender.Send(cloudEvent.Data as Comum.Models.Carteira);
+                            CarteiraCreate carteiraCreate = new CarteiraCreate
+                            {
+                                Cpf = mensagem.Cpf,
+                                NomePessoa = mensagem.NomePessoa,
+                                DataNascimento = mensagem.DataNascimento,
+                                DataAgendamento = mensagem.GetLatestAplicacao().DataAgendamento,
+                                NomeVacina = mensagem.GetLatestAplicacao().NomeVacina,
+                                Dose = mensagem.GetLatestAplicacao().Dose,
+                                DataAplicada = mensagem.GetLatestAplicacao().DataAplicacao
+                            };
+
+                            await sender.Send(carteiraCreate, cancellationToken);
                         }
                         catch (Exception e)
                         {

@@ -9,7 +9,6 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -56,7 +55,7 @@ namespace Jenner.Agendamento.API.Services
 
             //TODO: Após isso, envia a aplicação para a fila de aplicações agendadas e retorna para o usuário o comprovante do agendamento (aplicação com o GUID preenchido)
 
-            var requestSource = HttpContextAccessor?.HttpContext?.Request.Host.Value ?? throw new ArgumentNullException(nameof(HttpContextAccessor));
+            var requestSource = HttpContextAccessor?.HttpContext?.Request.Host.Value ?? "FromAgendador";
 
             var cloudEvent = new CloudEvent
             {
