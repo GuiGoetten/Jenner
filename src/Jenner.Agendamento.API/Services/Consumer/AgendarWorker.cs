@@ -15,7 +15,7 @@ namespace Jenner.Agendamento.API.Services.Consumer
     {
         public ISender sender;
         public AgendarWorker(IServiceProvider serviceProvider, ISender sender) :
-            base(serviceProvider, new JsonEventFormatter<string>())
+            base(serviceProvider, new JsonEventFormatter<Comum.Models.Carteira>())
         {
             this.sender = sender ?? throw new ArgumentNullException(nameof(sender));
         }
@@ -52,7 +52,7 @@ namespace Jenner.Agendamento.API.Services.Consumer
                                 Dose = carteira.GetLatestAplicacao().Dose
                             };
 
-                            await sender.Send(novoAgendamento, cancellationToken);
+                            Aplicacao aplicacaoResult = await sender.Send(novoAgendamento, cancellationToken);
                         }
                         catch (Exception e)
                         {

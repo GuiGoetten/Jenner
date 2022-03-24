@@ -11,13 +11,16 @@ namespace Jenner.Comum.Models
 
         public Carteira AddAplicacao(Aplicacao aplicacao)
         {
-            return this with
+
+            Carteira cr = this with
             {
                 Aplicacoes = new List<Aplicacao>(Aplicacoes)
                 {
                     aplicacao
                 },
             };
+
+            return cr;
         }
 
         public Aplicacao GetLatestAplicacao() 

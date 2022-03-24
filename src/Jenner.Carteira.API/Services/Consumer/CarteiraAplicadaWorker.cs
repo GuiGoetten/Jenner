@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace Jenner.Carteira.API.Services.Consumer
 {
-    public class CarteiraWorker : KafkaConsumerBase
+    public class CarteiraAplicadaWorker : KafkaConsumerBase
     {
         public ISender sender;
-        public CarteiraWorker(IServiceProvider serviceProvider, ISender sender) :
-            base(serviceProvider, new JsonEventFormatter<string>())
+        public CarteiraAplicadaWorker(IServiceProvider serviceProvider, ISender sender) :
+            base(serviceProvider, new JsonEventFormatter<Comum.Models.Carteira>())
         {
             this.sender = sender ?? throw new ArgumentNullException(nameof(sender));
         }
@@ -34,12 +34,26 @@ namespace Jenner.Carteira.API.Services.Consumer
                 {
                     //TODO: Pra retirar depois
                     ConsumeResult<string, byte[]> result = KafkaConsumer.Consume(cancellationToken);
+
                     var cloudEvent = result.Message.ToCloudEvent(cloudEventFormatter);
-                    if (cloudEvent.Data is CarteiraCreate mensagem)
+
+                    if (cloudEvent.Data is Comum.Models.Carteira mensagem)
                     {
                         try
                         {
-                            await sender.Send(cloudEvent.Data as CarteiraCreate);
+                            CarteiraCreate carteiraCreate = new CarteiraCreate
+                            {
+                                Cpf = mensagem.Cpf,
+                                NomePessoa = mensagem.NomePessoa,
+                                DataNascimento = mensagem.DataNascimento,
+                                DataAgendamento = mensagem.GetLatestAplicacao().DataAgendamento,
+                                NomeVacina = mensagem.GetLatestAplicacao().NomeVacina,
+                                Dose = mensagem.GetLatestAplicacao().Dose,
+                                DataAplicada = mensagem.GetLatestAplicacao().DataAplicacao
+                            };
+
+                            await sender.Send(carteiraCreate, cancellationToken);
+
                         }
                         catch (Exception e)
                         {

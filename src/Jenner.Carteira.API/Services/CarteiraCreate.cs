@@ -53,21 +53,6 @@ namespace Jenner.Carteira.API.Services
                 .GetCarteiraCollection()
                 .UpdateAsync(carteiraResult.ToPersistence(), cancellationToken);
 
-            //TODO: Após isso, envia a aplicação para a fila de aplicações agendadas e retorna para o usuário o comprovante do agendamento (aplicação com o GUID preenchido)
-
-            var requestSource = HttpContextAccessor?.HttpContext?.Request.Host.Value ?? throw new ArgumentNullException(nameof(HttpContextAccessor));
-
-            var cloudEvent = new CloudEvent
-            {
-                Id = Guid.NewGuid().ToString(),
-                Type = Constants.CloudEvents.AplicadaType,
-                Source = new UriBuilder(requestSource).Uri,
-                Data = carteiraResult
-            };
-
-            //TODO: Fazer esse trem ficar assíncrono de verdade
-            await PublishToKafka(cloudEvent, cancellationToken);
-
             return await Task.FromResult(carteiraResult);
         }
     }

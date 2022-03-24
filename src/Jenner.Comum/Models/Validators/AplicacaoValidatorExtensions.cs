@@ -18,20 +18,20 @@ namespace Jenner.Comum.Models.Validators
 
         public static void ValidaAplicacao(this IAplicacao aplicacao)
         {
-            if (!aplicacao.DataAplicacao.HasValue)
-            {
-                throw new ArgumentOutOfRangeException("Aplicação não possui data de aplicação");
-            }
+            //if (!aplicacao.DataAplicacao.HasValue)
+            //{
+            //    throw new ArgumentOutOfRangeException("Aplicação não possui data de aplicação");
+            //}
 
-            if (aplicacao.DataAplicacao < DateTime.Today)
-            {
-                throw new ArgumentOutOfRangeException("Não é possível registrar uma aplicação para uma data anterior ao dia atual");
-            }
+            //if (aplicacao.DataAplicacao < DateTime.Today )
+            //{
+            //    throw new ArgumentOutOfRangeException("Não é possível registrar uma aplicação para uma data anterior ao dia atual");
+            //}
 
-            if (aplicacao.DataAplicacao < aplicacao.DataAgendamento)
-            {
-                throw new ArgumentOutOfRangeException("Não é possível realizar a aplicação antes da data agendada");
-            }
+            //if (aplicacao.DataAplicacao < aplicacao.DataAgendamento)
+            //{
+            //    throw new ArgumentOutOfRangeException("Não é possível realizar a aplicação antes da data agendada");
+            //}
         }
     }
 }

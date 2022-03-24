@@ -51,6 +51,7 @@ namespace Jenner.Carteira.API
             });
 
             services.AddHostedService<CarteiraAgendadaWorker>();
+            services.AddHostedService<CarteiraAplicadaWorker>();
         }
 
         private void AddKafkaServices(IServiceCollection services)
@@ -72,7 +73,7 @@ namespace Jenner.Carteira.API
             {
                 return new MongoClient(Configuration.GetConnectionString(Constants.MongoConnectionString));
             });
-            services.AddScoped(sp =>
+            services.AddSingleton(sp =>
             {
                 MongoClient mongoClient = sp.GetRequiredService<MongoClient>();
                 return mongoClient.GetDatabase(Constants.MongoCarteiraDatabase);

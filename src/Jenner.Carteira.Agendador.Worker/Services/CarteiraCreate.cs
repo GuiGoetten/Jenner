@@ -26,7 +26,7 @@ namespace Jenner.Carteira.Agendador.Worker.Services
         private readonly IMongoDatabase MongoDatabase;
 
         public CarteiraCreateHandler(IProducer<string, byte[]> producer, CloudEventFormatter cloudEventFormatter, IMongoDatabase mongoDatabase) :
-                                                                       base(producer, cloudEventFormatter, Constants.CloudEvents.AgendadaTopic)
+                                                                       base(producer, cloudEventFormatter, Constants.CloudEvents.AgendarTopic)
         {
             MongoDatabase = mongoDatabase ?? throw new ArgumentNullException(nameof(mongoDatabase));
         }
@@ -36,7 +36,7 @@ namespace Jenner.Carteira.Agendador.Worker.Services
             Console.WriteLine("Buscando no banco...");
             Vacina vacinaResult = await MongoDatabase
                                         .GetVacinaCollection()
-                                        .FetchAsync(request.UltimaAplicacao.NomeVacina, cancellationToken);
+                                        .FindOrCreateAsync(request.UltimaAplicacao.NomeVacina, cancellationToken);
 
             if (request.UltimaAplicacao.Dose >= vacinaResult.Doses)
             {
@@ -51,7 +51,7 @@ namespace Jenner.Carteira.Agendador.Worker.Services
 
             Console.WriteLine("Criando aplicacao....");
 
-            carteira.AddAplicacao(novoAgendamento);
+            Comum.Models.Carteira carteiraSend = carteira.AddAplicacao(novoAgendamento);
 
             Console.WriteLine("Adicionei agendamento....");
 
@@ -59,9 +59,11 @@ namespace Jenner.Carteira.Agendador.Worker.Services
             {
                 Id = Guid.NewGuid().ToString(),
                 Type = Constants.CloudEvents.AplicadaType,
-                Source = new Uri($"From Agendador {DateTime.Now}") ,
-                Data = carteira
+                Source = new UriBuilder("fromAgendador").Uri, //new UriBuilder($"From Agendador {DateTime.Now}").Uri,
+                Data = carteiraSend
             };
+
+            await PublishToKafka(cloudEvent, cancellationToken);
 
             return Unit.Value;
         }

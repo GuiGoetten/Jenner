@@ -1,4 +1,6 @@
-﻿namespace Jenner.Comum.Models
+﻿using System;
+
+namespace Jenner.Comum.Models
 {
     public interface IVacina
     {
