@@ -1,0 +1,80 @@
+name: .NET
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    permissions:
+      packages: write
+      contents: read
+      
+    steps:
+    
+    - name: Checkout
+      uses: actions/checkout@v2
+    
+    - name: "Extract Branch name"
+      run: echo "BRANCH=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
+      
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+      
+    - name: Set up Docker Buildx
+      uses: docker/login-action@v1
+      
+    - name: "Login to GitHub registry"
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GH_PACKAGES_TOKEN }}
+    
+    
+    - name: "Publish the image Jenner.Agendamento.Api"
+      uses: docker/build-push-action@v2
+      with:
+        file: ./src/Jenner.Agendamento.API/Dockerfile
+        context: .
+        push: true
+        tags: |
+          ghcr.io/${{ github.repository }}/jennerAgendamento:${{ github.sha }}
+          ghcr.io/${{ github.repository }}/jennerAgendamento:${{ env.BRANCH }}
+    
+    - name: "Publish the image Jenner.Aplicacao.Api"
+      uses: docker/build-push-action@v2
+      with:
+        file: ./src/Jenner.Aplicacao.API/Dockerfile
+        context: .
+        push: true
+        tags: |
+          ghcr.io/${{ github.repository }}/jennerAplicacao:${{ github.sha }}
+          ghcr.io/${{ github.repository }}/jennerAplicacao:${{ env.BRANCH }}
+
+    - name: "Publish the image Jenner.Carteira.Api"
+      uses: docker/build-push-action@v2
+      with:
+        file: ./src/Jenner.Carteira.API/Dockerfile
+        context: .
+        push: true
+        tags: |
+          ghcr.io/${{ github.repository }}/jennerCarteira:${{ github.sha }}
+          ghcr.io/${{ github.repository }}/jennerCarteira:${{ env.BRANCH }}      
+          
+    - name: "Publish the image Jenner.Carteira.Agendador.Worker.Api"
+      uses: docker/build-push-action@v2
+      with:
+        file: ./src/Jenner.Carteira.Agendador.Worker/Dockerfile
+        context: .
+        push: true
+        tags: |
+          ghcr.io/${{ github.repository }}/jennerCarteiraAgendadorWorker:${{ github.sha }}
+          ghcr.io/${{ github.repository }}/jennerCarteiraAgendadorWorker:${{ env.BRANCH }}      
+          
