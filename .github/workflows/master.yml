@@ -76,5 +76,5 @@ jobs:
         push: true
         tags: |
           ghcr.io/guigoetten/jenner/jennercarteiraagendadorworker:${{ github.sha }}
-          ghcr.io/fuigoetten/jenner/jennercarteiraagendadorworker:${{ env.BRANCH }}      
+          ghcr.io/guigoetten/jenner/jennercarteiraagendadorworker:${{ env.BRANCH }}      
           
