@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="CloudNative.CloudEvents" Version="2.1.1" />
     <PackageReference Include="CloudNative.CloudEvents.Kafka" Version="2.1.1" />
-    <PackageReference Include="CloudNative.CloudEvents.SystemTextJson" Version="2.1.1" />
+    <PackageReference Include="CloudNative.CloudEvents.SystemTextJson" Version="2.2.0" />
     <PackageReference Include="Confluent.Kafka" Version="1.8.2" />
     <PackageReference Include="MediatR" Version="9.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
