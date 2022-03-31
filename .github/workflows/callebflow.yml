@@ -31,5 +31,5 @@ jobs:
           
     - name: "Tentando publicar"
       run: |
-        ImageId=ghcr.io/guigoetten/jenner/jenneragendamento:teste
+        ImageId=teste:latest
         docker push $ImageId
