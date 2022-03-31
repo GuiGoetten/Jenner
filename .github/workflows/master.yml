@@ -35,7 +35,7 @@ jobs:
       with:
         registry: ghcr.io
         username: ${{ github.repository_owner }}
-        password: ${{ secrets.GH_PACKAGES_TOKEN }}    
+        password: ${{ secrets.GH_PACKAGES_TOKEN2 }}    
     
     - name: "Publish the image Jenner.Agendamento.Api"
       uses: docker/build-push-action@v2
@@ -46,34 +46,34 @@ jobs:
         tags: |
           ghcr.io/guigoetten/jenner/jenneragendamento:${{ github.sha }}
           ghcr.io/guigoetten/jenner/jenneragendamento:${{ env.BRANCH }}
-###
-###    - name: "Publish the image Jenner.Aplicacao.Api"
-###      uses: docker/build-push-action@v2
-###      with:
-###        file: ./src/Jenner.Aplicacao.API/Dockerfile
-###        context: .
-###        push: true
-###        tags: |
-###          ghcr.io/guigoetten/jenner/jenneraplicacao:${{ github.sha }}
-###          ghcr.io/guigoetten/jenner/jenneraplicacao:${{ env.BRANCH }}
-###
-###    - name: "Publish the image Jenner.Carteira.Api"
-###      uses: docker/build-push-action@v2
-###      with:
-###        file: ./src/Jenner.Carteira.API/Dockerfile
-###        context: .
-###        push: true
-###        tags: |
-###          ghcr.io/guigoetten/jenner/jennercarteira:${{ github.sha }}
-###          ghcr.io/guigoetten/jenner/jennercarteira:${{ env.BRANCH }}
-###          
-###    - name: "Publish the image Jenner.Carteira.Agendador.Worker.Api"
-###      uses: docker/build-push-action@v2
-###      with:
-###        file: ./src/Jenner.Carteira.Agendador.Worker/Dockerfile
-###        context: .
-###        push: true
-###        tags: |
-###          ghcr.io/guigoetten/jenner/jennercarteiraagendadorworker:${{ github.sha }}
-###          ghcr.io/guigoetten/jenner/jennercarteiraagendadorworker:${{ env.BRANCH }}   
-###          
+
+    - name: "Publish the image Jenner.Aplicacao.Api"
+      uses: docker/build-push-action@v2
+      with:
+        file: ./src/Jenner.Aplicacao.API/Dockerfile
+        context: .
+        push: true
+        tags: |
+          ghcr.io/guigoetten/jenner/jenneraplicacao:${{ github.sha }}
+          ghcr.io/guigoetten/jenner/jenneraplicacao:${{ env.BRANCH }}
+
+    - name: "Publish the image Jenner.Carteira.Api"
+      uses: docker/build-push-action@v2
+      with:
+        file: ./src/Jenner.Carteira.API/Dockerfile
+        context: .
+        push: true
+        tags: |
+          ghcr.io/guigoetten/jenner/jennercarteira:${{ github.sha }}
+          ghcr.io/guigoetten/jenner/jennercarteira:${{ env.BRANCH }}
+          
+    - name: "Publish the image Jenner.Carteira.Agendador.Worker.Api"
+      uses: docker/build-push-action@v2
+      with:
+        file: ./src/Jenner.Carteira.Agendador.Worker/Dockerfile
+        context: .
+        push: true
+        tags: |
+          ghcr.io/guigoetten/jenner/jennercarteiraagendadorworker:${{ github.sha }}
+          ghcr.io/guigoetten/jenner/jennercarteiraagendadorworker:${{ env.BRANCH }}   
+          
