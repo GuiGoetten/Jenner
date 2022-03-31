@@ -28,5 +28,5 @@ jobs:
           
     - name: "Tentando publicar"
       run: |
-        ImageId=ghcr.io/guigoetten/jenner/jenneragendamento:${{ github.sha }}
+        ImageId=ghcr.io/guigoetten/jenner/jenneragendamento:teste
         docker push $ImageId
