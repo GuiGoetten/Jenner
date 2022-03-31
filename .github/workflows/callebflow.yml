@@ -25,6 +25,9 @@ jobs:
       
     - name: Log into GitHub Container Registry
       run: echo "${{ secrets.GH_PACKAGES_TOKEN2 }}" | docker login https://ghcr.io -u ${{ github.actor }}} --password-stdin
+      
+    - name: Images
+      run: docker images
           
     - name: "Tentando publicar"
       run: |
