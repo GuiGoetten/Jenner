@@ -21,7 +21,7 @@ jobs:
       run: echo "BRANCH=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
       
     - name: Build Container Image
-      run: docker build . --file Dockerfile --tag $IMAGE_NAME
+      run: docker build . --file ./src/Jenner.Agendamento.API/Dockerfile --tag Teste
       
     - name: Log into GitHub Container Registry
       run: echo "${{ secrets.GH_PACKAGES_TOKEN2 }}" | docker login https://ghcr.io -u ${{ github.actor }}} --password-stdin
