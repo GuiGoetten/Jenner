@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: app-aplicar
-          image: ghcr.io/guigoetten/jenner/jenneragendamento:master
+          image: ghcr.io/guigoetten/jenner/jenneraplicacao:master
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
