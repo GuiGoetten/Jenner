@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-consultar
+  labels:
+    app: consultar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: app-consultar
+  template:
+    metadata:
+      labels:
+        app: consultar
+        service: app-consultar
+    spec:
+      containers:
+        - name: app-consultar
+          image: ghcr.io/guigoetten/jenner/jenneragendamento:master
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-consultar-service
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8082
+      targetPort: 80
+      protocol: TCP
+  selector:
+    service: app-consultar

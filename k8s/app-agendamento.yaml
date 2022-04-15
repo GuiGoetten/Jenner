@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-agendamento
+  labels:
+    app: agendamento
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: app-agendamento
+  template:
+    metadata:
+      labels:
+        app: agendamento
+        service: app-agendamento
+    spec:
+      containers:
+        - name: app-agendamento
+          image: ghcr.io/guigoetten/jenner/jenneragendamento:master
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-agendamento-service
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8083
+      targetPort: 80
+      protocol: TCP
+  selector:
+    service: app-agendamento
