@@ -1,37 +1,63 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app-aplicar
+  annotations:
+    kompose.cmd: kompose-windows-amd64.exe convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
   labels:
-    app: aplicar
+    io.kompose.service: jenner-aplicacao-api
+  name: jenner-aplicacao-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      service: app-aplicar
+      io.kompose.service: jenner-aplicacao-api
+  strategy:
+    type: Recreate
   template:
     metadata:
+      annotations:
+        kompose.cmd: kompose-windows-amd64.exe convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
       labels:
-        app: aplicar
-        service: app-aplicar
+        io.kompose.service: jenner-aplicacao-api
     spec:
       containers:
-        - name: app-aplicar
+        - env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: ASPNETCORE_URLS
+              value: http://+:80
+            - name: ConnectionStrings__KafkaBootstrap
+              value: kafka:29092
+            - name: ConnectionStrings__MongoDb
+              value: mongodb://root:imroot@mongo.db:27017/
           image: ghcr.io/guigoetten/jenner/jenneraplicacao:master
-          imagePullPolicy: IfNotPresent
+          name: jenner-aplicacao-api
           ports:
             - containerPort: 80
-              protocol: TCP
+          resources: {}
+      restartPolicy: Always
+status: {}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: app-aplicar-service
+  annotations:
+    kompose.cmd: kompose-windows-amd64.exe convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: jenner-aplicacao-api
+  name: jenner-aplicacao-api
 spec:
-  type: LoadBalancer
   ports:
-    - port: 8081
-      targetPort: 80
-      protocol: TCP
+    - name: "5030"
+      port: 5030
+      targetPort: 5030
   selector:
-    service: app-aplicar
+    io.kompose.service: jenner-aplicacao-api
+status:
+  loadBalancer: {}
