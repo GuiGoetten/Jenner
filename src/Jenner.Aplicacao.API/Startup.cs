@@ -11,6 +11,8 @@ using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using Jenner.Comum;
 using Jenner.Aplicacao.API.Services.Consumer;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Http;
 
 namespace Jenner.Aplicacao.API
 {
@@ -28,6 +30,9 @@ namespace Jenner.Aplicacao.API
         {
             services.AddHttpContextAccessor();
             services.AddMediatR(GetType().Assembly);
+
+            services.Configure<ReverseProxySettings>(Configuration.GetSection("ReverseProxy"));
+            services.AddSingleton(provider => provider.GetRequiredService<IOptions<ReverseProxySettings>>().Value);
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -84,6 +89,27 @@ namespace Jenner.Aplicacao.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            var reverseProxy = app.ApplicationServices.GetRequiredService<ReverseProxySettings>();
+            if (reverseProxy.IsConfigured)
+            {
+                app.Use(async (ctx, next) =>
+                {
+                    if (!string.IsNullOrEmpty(reverseProxy.Scheme))
+                    {
+                        ctx.Request.Scheme = reverseProxy.Scheme;
+                    }
+                    if (!string.IsNullOrEmpty(reverseProxy.Host))
+                    {
+                        ctx.Request.Host = new HostString(reverseProxy.Host);
+                    }
+                    await next();
+                });
+                if (!string.IsNullOrEmpty(reverseProxy.PathBase))
+                {
+                    app.UsePathBase(reverseProxy.PathBase);
+                }
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
