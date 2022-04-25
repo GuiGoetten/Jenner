@@ -6,9 +6,11 @@ using Jenner.Comum;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 
@@ -29,6 +31,9 @@ namespace Jenner.Carteira.API
         {
             services.AddHttpContextAccessor();
             services.AddMediatR(GetType().Assembly);
+
+            services.Configure<ReverseProxySettings>(Configuration.GetSection("ReverseProxy"));
+            services.AddSingleton(provider => provider.GetRequiredService<IOptions<ReverseProxySettings>>().Value);
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -83,7 +88,28 @@ namespace Jenner.Carteira.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if(env.IsDevelopment())
+            var reverseProxy = app.ApplicationServices.GetRequiredService<ReverseProxySettings>();
+            if (reverseProxy.IsConfigured)
+            {
+                app.Use(async (ctx, next) =>
+                {
+                    if (!string.IsNullOrEmpty(reverseProxy.Scheme))
+                    {
+                        ctx.Request.Scheme = reverseProxy.Scheme;
+                    }
+                    if (!string.IsNullOrEmpty(reverseProxy.Host))
+                    {
+                        ctx.Request.Host = new HostString(reverseProxy.Host);
+                    }
+                    await next();
+                });
+                if (!string.IsNullOrEmpty(reverseProxy.PathBase))
+                {
+                    app.UsePathBase(reverseProxy.PathBase);
+                }
+            }
+
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
