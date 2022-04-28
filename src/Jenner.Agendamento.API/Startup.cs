@@ -121,9 +121,10 @@ namespace Jenner.Agendamento.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Jenner.Agendamento.API v1"));
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Jenner.Agendamento.API v1"));
             //app.UseForwardedHeaders();
 
             //if (!Configuration.GetValue<bool>("DOTNET_RUNNING_IN_CONTAINER"))
