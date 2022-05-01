@@ -27,13 +27,13 @@ spec:
       containers:
         - env:
             - name: ASPNETCORE_ENVIRONMENT
-              value: Development
+              value: Deployment
             - name: ASPNETCORE_URLS
               value: http://+:80
             - name: ConnectionStrings__KafkaBootstrap
               value: kafka:29092
             - name: ConnectionStrings__MongoDb
-              value: mongodb://root:imroot@mongo.db:27017/
+              value: mongodb://root:imroot@mongo-db:27017/
           image: ghcr.io/guigoetten/jenner/jenneraplicacao:master
           name: jenner-aplicacao-api
           ports:
@@ -54,9 +54,9 @@ metadata:
   name: jenner-aplicacao-api
 spec:
   ports:
-    - name: "5030"
-      port: 5030
-      targetPort: 5030
+    - name: "80"
+      port: 80
+      targetPort: 80
   selector:
     io.kompose.service: jenner-aplicacao-api
 status:
