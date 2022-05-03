@@ -73,7 +73,7 @@ spec:
                 name:  whoami
                 port:
                   number: 80
-          - path: /
+          - path: /aplicacao
             pathType: Prefix
             backend:
               service:
@@ -113,6 +113,7 @@ spec:
             - --providers.kubernetesingress
             - --api.dashboard=true
             - --api.insecure=true
+            - --accesslog=true
           ports:
             - name: web
               containerPort: 80
