@@ -1,9 +1,13 @@
-POST http://apps.minikube/aplicacao/api
+POST http://apps.minikube/aplicacao/
 content-type: application/json
 
 {
     
 }
+
+###
+GET http://apps.minikube/foo
+
 
 
 ####

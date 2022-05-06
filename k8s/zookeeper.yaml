@@ -55,7 +55,7 @@ metadata:
   creationTimestamp: null
   labels:
     io.kompose.service: zookeeper
-  name: zookeeper
+  name: zookeeper-service
 spec:
   ports:
     - name: "2181"

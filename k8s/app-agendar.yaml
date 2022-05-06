@@ -22,16 +22,24 @@ spec:
           ports:
             - containerPort: 80
               protocol: TCP
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Deployment
+            - name: ASPNETCORE_URLS
+              value: http://+:80
+            - name: ConnectionStrings__KafkaBootstrap
+              value: kafka-service:29092
+            - name: ConnectionStrings__MongoDb
+              value: mongodb://root:imroot@mongo-db:27017/
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: app-agendar-service
 spec:
-  type: LoadBalancer
   ports:
-    - port: 8080
+    - name: "80"
+      port: 80
       targetPort: 80
-      protocol: TCP
   selector:
     service: app-agendar

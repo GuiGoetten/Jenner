@@ -29,7 +29,7 @@ spec:
             - name: ASPNETCORE_URLS
               value: http://+:80
             - name: ConnectionStrings__KafkaBootstrap
-              value: kafka:29092
+              value: kafka-service:29092
             - name: ConnectionStrings__MongoDb
               value: mongodb://root:imroot@mongo-db:27017/
 
@@ -41,8 +41,9 @@ metadata:
 
 spec:
   ports:
-    - name: http
+    - name: "80"
       port: 80
+      targetPort: 80
   selector:
     app: aplicacao
     task: aplicar
