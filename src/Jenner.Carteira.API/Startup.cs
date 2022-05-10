@@ -51,6 +51,8 @@ namespace Jenner.Carteira.API
 
             AddKafkaServices(services);
             AddMongoServices(services);
+            
+            services.AddHealthChecks();
 
             services.AddScoped(c =>
             {
@@ -135,6 +137,7 @@ namespace Jenner.Carteira.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
             });
         }
     }

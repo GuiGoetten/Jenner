@@ -32,6 +32,20 @@ spec:
               value: kafka-service:29092
             - name: ConnectionStrings__MongoDb
               value: mongodb://root:imroot@mongo-db:27017/
+          livenessProbe:
+            initialDelaySeconds: 1
+            periodSeconds: 2
+            timeoutSeconds: 1
+            successThreshold: 1
+            failureThreshold: 1
+            httpGet:
+              host:
+              scheme: HTTP
+              path: /health
+              httpHeaders:
+              - name: Host
+                value: apps.minikube.vacinacao.aplicar
+              port: 80
 
 ---
 apiVersion: v1
