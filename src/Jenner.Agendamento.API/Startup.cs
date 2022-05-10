@@ -141,6 +141,7 @@ namespace Jenner.Agendamento.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
             });
         }
     }

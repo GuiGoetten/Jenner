@@ -138,6 +138,7 @@ namespace Jenner.Aplicacao.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
             });
         }
     }
