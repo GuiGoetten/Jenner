@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 using System;
+using Jenner.Carteira.Agendador.Worker.Services;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Jenner.Carteira.Agendador.Worker
 {
@@ -31,6 +33,8 @@ namespace Jenner.Carteira.Agendador.Worker
                     AddMongoServices(services, configuration);
 
                     services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
+
+                    services.AddSingleton<IHealthCheckPublisher>(sp => sp.GetRequiredService<HeartbeatService>());
 
                     services.AddHostedService<AgendadorWorker>();
                 });

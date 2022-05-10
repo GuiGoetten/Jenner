@@ -53,6 +53,8 @@ namespace Jenner.Aplicacao.API
 
             //Adicionar os profiles
             //services.AddAutoMapper(ProfileRegistration.GetProfiles());
+            
+            services.AddHealthChecks();
 
             services.AddScoped(c =>
             {
@@ -136,6 +138,7 @@ namespace Jenner.Aplicacao.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
             });
         }
     }

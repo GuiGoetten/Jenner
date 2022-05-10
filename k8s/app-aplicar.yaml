@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose-windows-amd64.exe convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: jenner-aplicacao-api
+  name: jenner-aplicacao-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: jenner-aplicacao-api
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose-windows-amd64.exe convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: jenner-aplicacao-api
+    spec:
+      containers:
+        - env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Deployment
+            - name: ASPNETCORE_URLS
+              value: http://+:80
+            - name: ConnectionStrings__KafkaBootstrap
+              value: kafka:29092
+            - name: ConnectionStrings__MongoDb
+              value: mongodb://root:imroot@mongo-db:27017/
+          image: ghcr.io/guigoetten/jenner/jenneraplicacao:master
+          name: jenner-aplicacao-api
+          ports:
+            - containerPort: 80
+          resources: {}
+      restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose-windows-amd64.exe convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: jenner-aplicacao-api
+  name: jenner-aplicacao-api
+spec:
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 80
+  selector:
+    io.kompose.service: jenner-aplicacao-api
+status:
+  loadBalancer: {}

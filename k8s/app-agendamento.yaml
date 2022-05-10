@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-agendamento
+  labels:
+    app: agendamento
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: app-agendamento
+  template:
+    metadata:
+      labels:
+        app: agendamento
+        service: app-agendamento
+    spec:
+      containers:
+        - name: app-agendamento
+          image: ghcr.io/guigoetten/jenner/jennercarteiraagendadorworker:master
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Deployment
+            - name: ASPNETCORE_URLS
+              value: http://+:80
+            - name: ConnectionStrings__KafkaBootstrap
+              value: kafka-service:29092
+            - name: ConnectionStrings__MongoDb
+              value: mongodb://root:imroot@mongo-db:27017/
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-agendamento-service
+spec:
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 80
+  selector:
+    service: app-agendamento
