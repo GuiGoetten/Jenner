@@ -50,6 +50,8 @@ namespace Jenner.Agendamento.API
             AddKafkaServices(services);
             AddMongoServices(services);
 
+            services.AddHealthChecks();
+            
             services.AddScoped(c =>
             {
                 var config = new ConsumerConfig

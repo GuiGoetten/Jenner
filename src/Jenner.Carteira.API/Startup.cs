@@ -51,6 +51,8 @@ namespace Jenner.Carteira.API
 
             AddKafkaServices(services);
             AddMongoServices(services);
+            
+            services.AddHealthChecks();
 
             services.AddScoped(c =>
             {
