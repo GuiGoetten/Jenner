@@ -8,7 +8,7 @@ services:
       dockerfile: src/Jenner.Agendamento.API/Dockerfile
 
   Jenner.Aplicacao.API:
-    image: ${DOCKER_REGISTRY-}jenneraplicacaoapi
+    image: ghcr.io/guigoetten/jenner/jenneraplicacao:master
     build:
       context: .
       dockerfile: src/Jenner.Aplicacao.API/Dockerfile

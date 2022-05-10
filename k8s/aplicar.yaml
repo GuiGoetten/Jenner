@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aplicar
+  labels:
+    app: aplicacao
+    name: aplicar
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: aplicacao
+      task: aplicar
+  template:
+    metadata:
+      labels:
+        app: aplicacao
+        task: aplicar
+    spec:
+      containers:
+        - name: aplicar
+          image: ghcr.io/guigoetten/jenner/jenneraplicacao:master
+          ports:
+            - containerPort: 80
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Deployment
+            - name: ASPNETCORE_URLS
+              value: http://+:80
+            - name: ConnectionStrings__KafkaBootstrap
+              value: kafka-service:29092
+            - name: ConnectionStrings__MongoDb
+              value: mongodb://root:imroot@mongo-db:27017/
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aplicar
+
+spec:
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 80
+  selector:
+    app: aplicacao
+    task: aplicar
