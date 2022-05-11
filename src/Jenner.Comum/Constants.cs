@@ -11,6 +11,8 @@
 
         public const string MongoCarteiraDatabase = @"jenner";
 
+        public const string KafkaBootstrapKey = @"KafkaBootstrap";
+
         public static class CloudEvents
         {
             public const string AgendadaTopic = "Vacinacao.Agendada";
