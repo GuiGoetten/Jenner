@@ -28,13 +28,24 @@ namespace Jenner.Carteira.Agendador.Worker
                 {
                     IConfiguration configuration = hostContext.Configuration ?? throw new ArgumentNullException("Configurations weren't set for this worker, unable to continue");
 
+                    services
+                        .AddHealthChecks()
+                        .AddMongoDb(configuration.GetConnectionString(Constants.MongoConnectionString))
+                        .AddKafka(new ProducerConfig
+                        {
+                            BootstrapServers = configuration.GetConnectionString(Constants.KafkaBootstrapKey)
+                        });
+
                     AddKafkaServices(services, configuration);
 
                     AddMongoServices(services, configuration);
 
                     services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
-
+                    
+                    services.Configure<HeartbeatConfiguration>(configuration.GetSection(nameof(HeartbeatConfiguration)));
+                    services.AddSingleton<HeartbeatService>();
                     services.AddSingleton<IHealthCheckPublisher>(sp => sp.GetRequiredService<HeartbeatService>());
+                    services.AddHostedService(sp => sp.GetRequiredService<HeartbeatService>());
 
                     services.AddHostedService<AgendadorWorker>();
                 });

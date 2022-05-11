@@ -118,10 +118,14 @@ services:
       - mongo.db
 
   Jenner.Carteira.Agendador.Worker:
+    ports:
+      - "7777:7777"
+
     environment:
       - ConnectionStrings__KafkaBootstrap=kafka:29092
       - ConnectionStrings__MongoDb=mongodb://root:imroot@mongo.db:27017/
       - ASPNETCORE_ENVIRONMENT=Development
+      - HeartbeatConfiguration__TcpPort=7777
     depends_on:
       - kafka
       - zookeeper

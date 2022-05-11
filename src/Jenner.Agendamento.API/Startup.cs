@@ -51,8 +51,13 @@ namespace Jenner.Agendamento.API
             AddKafkaServices(services);
             AddMongoServices(services);
 
-            services.AddHealthChecks();
-            
+            services.AddHealthChecks()
+                .AddMongoDb(Configuration.GetConnectionString(Constants.MongoConnectionString))
+                .AddKafka(new ProducerConfig
+                {
+                    BootstrapServers = Configuration.GetConnectionString(Constants.KafkaBootstrapKey),
+                });
+
             services.AddScoped(c =>
             {
                 var config = new ConsumerConfig
