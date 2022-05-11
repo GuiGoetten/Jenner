@@ -14,6 +14,7 @@ using Jenner.Comum;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 namespace Jenner.Agendamento.API
 {
@@ -140,8 +141,10 @@ namespace Jenner.Agendamento.API
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecks("/health/startup");
+                endpoints.MapHealthChecks("/healthz", new HealthCheckOptions { Predicate = _ => false });
+                endpoints.MapHealthChecks("/ready", new HealthCheckOptions { Predicate = _ => false });
                 endpoints.MapControllers();
-                endpoints.MapHealthChecks("/health");
             });
         }
     }
