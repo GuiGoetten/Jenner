@@ -55,7 +55,12 @@ namespace Jenner.Aplicacao.API
             //Adicionar os profiles
             //services.AddAutoMapper(ProfileRegistration.GetProfiles());
             
-            services.AddHealthChecks();
+            services.AddHealthChecks()
+                .AddMongoDb(Configuration.GetConnectionString(Constants.MongoConnectionString))
+                .AddKafka(new ProducerConfig
+                {
+                    BootstrapServers = Configuration.GetConnectionString(Constants.KafkaBootstrapKey),
+                });
 
             services.AddScoped(c =>
             {
