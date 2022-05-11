@@ -5,6 +5,7 @@ using Jenner.Carteira.API.Services.Consumer;
 using Jenner.Comum;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -136,8 +137,10 @@ namespace Jenner.Carteira.API
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecks("/health/startup");
+                endpoints.MapHealthChecks("/healthz", new HealthCheckOptions { Predicate = _ => false });
+                endpoints.MapHealthChecks("/ready", new HealthCheckOptions { Predicate = _ => false });
                 endpoints.MapControllers();
-                endpoints.MapHealthChecks("/health");
             });
         }
     }
