@@ -7,7 +7,7 @@ metadata:
     name: aplicar
 
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: aplicacao
@@ -21,6 +21,8 @@ spec:
       containers:
         - name: aplicar
           image: ghcr.io/guigoetten/jenner/jenneraplicacao:master
+          args:
+            - /server
           ports:
             - containerPort: 80
           env:
@@ -33,21 +35,12 @@ spec:
             - name: ConnectionStrings__MongoDb
               value: mongodb://root:imroot@mongo-db:27017/
           livenessProbe:
-            initialDelaySeconds: 1
-            periodSeconds: 2
-            timeoutSeconds: 1
-            successThreshold: 1
-            failureThreshold: 1
-            httpGet:
-              host:
-              scheme: HTTP
-              path: /health
-              httpHeaders:
-              - name: Host
-                value: apps.minikube.vacinacao.aplicar
+            tcpSocket:
               port: 80
-
+            initialDelaySeconds: 15
+            timeoutSeconds: 1
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
