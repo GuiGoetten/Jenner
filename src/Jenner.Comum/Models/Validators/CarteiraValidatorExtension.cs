@@ -13,12 +13,12 @@ namespace Jenner.Comum.Models.Validators
                 throw new ArgumentNullException("Uma carteira válida deve conter o Nome da Pessoa, CPF e Data de Nascimento");
             }
 
-            ulong cpf = ulong.Parse(Regex.Replace(carteira.Cpf, "[^0-9]", ""));
+            //ulong cpf = ulong.Parse(Regex.Replace(carteira.Cpf, "[^0-9]", ""));
 
-            if (!CPF.IsValid(new CPF(cpf)))
-            {
-                throw new ArgumentException("O CPF informado não é válido");
-            }
+            //if (!CPF.IsValid(new CPF(cpf)))
+            //{
+            //    throw new ArgumentException("O CPF informado não é válido");
+            //}
         }
     }
 }
