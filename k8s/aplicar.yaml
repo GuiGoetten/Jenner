@@ -21,15 +21,10 @@ spec:
       containers:
         - name: aplicar
           image: ghcr.io/guigoetten/jenner/jenneraplicacao:master
-          args:
-            - /server
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
-          env:
-            - name: ASPNETCORE_ENVIRONMENT
-              value: Development
-            - name: ASPNETCORE_URLS
-              value: http://+:80
+          env:                        
             - name: ConnectionStrings__KafkaBootstrap
               value: kafka-service:29092
             - name: ConnectionStrings__MongoDb

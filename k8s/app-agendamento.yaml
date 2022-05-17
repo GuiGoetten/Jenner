@@ -18,7 +18,7 @@ spec:
       containers:
         - name: app-agendamento
           image: ghcr.io/guigoetten/jenner/jennercarteiraagendadorworker:master
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
               protocol: TCP
