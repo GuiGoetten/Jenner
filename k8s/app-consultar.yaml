@@ -18,7 +18,7 @@ spec:
       containers:
         - name: app-consultar
           image: ghcr.io/guigoetten/jenner/jennercarteira:master
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
               protocol: TCP
