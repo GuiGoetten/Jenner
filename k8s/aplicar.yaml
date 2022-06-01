@@ -24,31 +24,31 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 80
-          env:                        
+          env:
             - name: ConnectionStrings__KafkaBootstrap
               value: kafka-service:29092
             - name: ConnectionStrings__MongoDb
               value: mongodb://root:imroot@mongo-db:27017/
-          # readinessProbe:
-          #   httpGet:
-          #     path: /ready # endpoint for readiness check; must return a 200 while pod is ready
-          #     port: 80
-          #     scheme: HTTP
-          #   initialDelaySeconds: 2 # number of seconds to wait after the pod comes up before it starts testing
-          #   periodSeconds: 10 # interval in seconds between tests
-          #   timeoutSeconds: 2 # number of seconds before a test will implicitly fail, if no success was returned in that time
-          #   successThreshold: 1 # has to pass a test this number of times contiguously before it can transition to a success
-          #   failureThreshold: 3 # has to fail a test this number of times contiguously before it can transition to a failure
-          # livenessProbe:
-          #   httpGet:
-          #     path: /healthz # endpoint for liveness check; must return a 200 while pod is live
-          #     port: 80
-          #     scheme: HTTP
-          #   initialDelaySeconds: 2 # number of seconds to wait after the pod comes up before it starts testing
-          #   periodSeconds: 10 # interval in seconds between tests
-          #   timeoutSeconds: 2 # number of seconds before a test will implicitly fail, if no success was returned in that time
-          #   successThreshold: 1 # has to pass a test this number of times contiguously before it can transition to a success
-          #   failureThreshold: 6 # has to fail a test this number of times contiguously before it can transition to a failure
+          readinessProbe:
+            httpGet:
+              path: /ready # endpoint for readiness check; must return a 200 while pod is ready
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 2 # number of seconds to wait after the pod comes up before it starts testing
+            periodSeconds: 10 # interval in seconds between tests
+            timeoutSeconds: 2 # number of seconds before a test will implicitly fail, if no success was returned in that time
+            successThreshold: 1 # has to pass a test this number of times contiguously before it can transition to a success
+            failureThreshold: 3 # has to fail a test this number of times contiguously before it can transition to a failure
+          livenessProbe:
+            httpGet:
+              path: /healthz # endpoint for liveness check; must return a 200 while pod is live
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 2 # number of seconds to wait after the pod comes up before it starts testing
+            periodSeconds: 10 # interval in seconds between tests
+            timeoutSeconds: 2 # number of seconds before a test will implicitly fail, if no success was returned in that time
+            successThreshold: 1 # has to pass a test this number of times contiguously before it can transition to a success
+            failureThreshold: 6 # has to fail a test this number of times contiguously before it can transition to a failure
 
 ---
 
