@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="brazil-utilities" Version="1.0.0" />
-    <PackageReference Include="MongoDB.Driver" Version="2.15.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.16.0" />
   </ItemGroup>
 
 </Project>
