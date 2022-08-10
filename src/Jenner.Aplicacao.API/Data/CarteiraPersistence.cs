@@ -39,7 +39,7 @@ namespace Jenner.Aplicacao.API.Data
         {
             CarteiraPersistence mongoResult = await collection
                 .Find(c => c.Cpf.Equals(cpf) && c.NomePessoa.Equals(nomePessoa))
-                .SingleOrDefaultAsync(cancellationToken);
+                .FirstOrDefaultAsync(cancellationToken);
             return mongoResult?.ToCarteira() ?? null;
         }
         public static async Task<CarteiraPersistence> InsertNewAsync(this IMongoCollection<CarteiraPersistence> collection, CarteiraPersistence carteira, CancellationToken cancellationToken = default)
@@ -54,7 +54,7 @@ namespace Jenner.Aplicacao.API.Data
         {
             CarteiraPersistence mongoResult = await collection
                 .Find(c => c.Cpf.Equals(cpf) && c.NomePessoa.Equals(nomePessoa))
-                .SingleOrDefaultAsync(cancellationToken);
+                .FirstOrDefaultAsync(cancellationToken);
 
             if (mongoResult is null)
             {
