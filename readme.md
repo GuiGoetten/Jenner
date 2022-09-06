@@ -3,9 +3,13 @@
 
 ### Passo 1
 
-    1) Executar `minikube start --extra-config=kubelet.housekeeping-interval=10s`
-    2) Executar `minikube tunnel`
-    3) Executar `minikube dashboard`
+    1) Adicionar o external IP no service do traefik
+    2) Executar `minikube start --extra-config=kubelet.housekeeping-interval=10s`
+    3) Executar `minikube tunnel`
+    4) Executar `minikube dashboard`
+    5) `minikube addons enable metrics-server`
+    6) Adicionar o ip do comando `minikube ip` no hosts
+    7) Acessar com a porta que mapeia a 80 do traefik
 
 ### Passo 2 
 
