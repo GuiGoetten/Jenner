@@ -16,6 +16,6 @@ class WebsiteUser(HttpUser):
         "dataNascimento": customer[2],
         "nomeVacina": "Pfizer",
         "dose": 1,
-        "dataAgendamento": "2022-06-15",
-        "dataAplicada": "2022-06-15"
+        "dataAgendamento": "2022-12-15",
+        "dataAplicada": "2022-12-15"
         })
