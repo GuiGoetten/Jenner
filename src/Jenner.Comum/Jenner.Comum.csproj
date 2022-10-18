@@ -8,6 +8,10 @@
   <ItemGroup>
     <PackageReference Include="brazil-utilities" Version="1.0.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.15.0" />
+    <PackageReference Include="Roslynator.Analyzers" Version="4.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
