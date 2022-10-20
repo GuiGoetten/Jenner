@@ -38,20 +38,13 @@ namespace Jenner.Carteira.API.Services
 
         public async Task<Comum.Models.Carteira> Handle(CarteiraCreate request, CancellationToken cancellationToken)
         {
+            Comum.Models.Aplicacao aplicacaoAplicada = new(request.Cpf, request.NomePessoa, request.NomeVacina, request.Dose, request.DataAgendamento, request.DataAplicada);
+            
+            aplicacaoAplicada.ValidaAplicacao();
 
             Comum.Models.Carteira carteiraResult = await MongoDatabase
                 .GetCarteiraCollection()
-                .FindOrCreateAsync(request.Cpf, request.NomePessoa, request.DataNascimento, cancellationToken);
-
-            Comum.Models.Aplicacao aplicacaoAplicada = new(carteiraResult.Cpf, carteiraResult.NomePessoa, request.NomeVacina, request.Dose, request.DataAgendamento, request.DataAplicada);
-
-            aplicacaoAplicada.ValidaAplicacao();
-
-            carteiraResult = carteiraResult.AddAplicacao(aplicacaoAplicada);
-
-            carteiraResult = await MongoDatabase
-                .GetCarteiraCollection()
-                .UpdateAsync(carteiraResult.ToPersistence(), cancellationToken);
+                .FindOrCreateAsync(request.Cpf, request.NomePessoa, request.DataNascimento, aplicacaoAplicada, cancellationToken);
 
             return await Task.FromResult(carteiraResult);
         }

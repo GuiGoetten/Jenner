@@ -25,13 +25,11 @@ namespace Jenner.Carteira.Agendador.Worker.Providers
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            Console.WriteLine("Estou executando assincronamente");
 
             KafkaConsumer = serviceProvider
                 .CreateScope().ServiceProvider
                 .GetRequiredService<IConsumer<string, byte[]>>();
 
-            Console.WriteLine("Fiz as coisas nada a ve");
 
             await Task.Run(() => DoScopedAsync(stoppingToken), stoppingToken);  // TALVEZ PRECISE MUDAR AQUI
 

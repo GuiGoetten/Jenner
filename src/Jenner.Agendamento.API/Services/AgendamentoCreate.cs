@@ -44,16 +44,7 @@ namespace Jenner.Agendamento.API.Services
 
             Carteira carteiraResult = await MongoDatabase
                 .GetCarteiraCollection()
-                .FindOrCreateAsync(request.Cpf, request.NomePessoa, request.DataNascimento, cancellationToken);
-
-
-            carteiraResult = carteiraResult.AddAplicacao(aplicacaoAgendada);
-
-            carteiraResult = await MongoDatabase
-                .GetCarteiraCollection()
-                .UpdateAsync(carteiraResult.ToPersistence(), cancellationToken);
-
-            //TODO: Após isso, envia a aplicação para a fila de aplicações agendadas e retorna para o usuário o comprovante do agendamento (aplicação com o GUID preenchido)
+                .FindOrCreateAsync(request.Cpf, request.NomePessoa, request.DataNascimento, aplicacaoAgendada, cancellationToken);
 
             var requestSource = HttpContextAccessor?.HttpContext?.Request.Host.Value ?? "FromAgendador";
 
