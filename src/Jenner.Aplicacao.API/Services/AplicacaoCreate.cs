@@ -39,25 +39,13 @@ namespace Jenner.Aplicacao.API.Services
 
         public async Task<Comum.Models.Aplicacao> Handle(AplicacaoCreate request, CancellationToken cancellationToken)
         {
-
-            //Comum.Models.Aplicacao aplicacaoAgendada = new(request.Cpf, request.NomePessoa, request.NomeVacina, request.Dose, request.DataAgendamento, request.DataAplicada);
-
-
-            Carteira carteiraResult = await MongoDatabase
-                .GetCarteiraCollection()
-                .FindOrCreateAsync(request.Cpf, request.NomePessoa, request.DataNascimento, cancellationToken);
-
-            Comum.Models.Aplicacao aplicacaoAplicada = new(carteiraResult.Cpf, carteiraResult.NomePessoa, request.NomeVacina, request.Dose, request.DataAgendamento, request.DataAplicada);
+            Comum.Models.Aplicacao aplicacaoAplicada = new(request.Cpf, request.NomePessoa, request.NomeVacina, request.Dose, request.DataAgendamento, request.DataAplicada);
 
             aplicacaoAplicada.ValidaAplicacao();
 
-            carteiraResult = carteiraResult.AddAplicacao(aplicacaoAplicada);
-
-            carteiraResult = await MongoDatabase
+            Carteira carteiraResult = await MongoDatabase
                 .GetCarteiraCollection()
-                .UpdateAsync(carteiraResult.ToPersistence(), cancellationToken);
-
-            //TODO: Após isso, envia a aplicação para a fila de aplicações agendadas e retorna para o usuário o comprovante do agendamento (aplicação com o GUID preenchido)
+                .FindOrCreateAsync(request.Cpf, request.NomePessoa, request.DataNascimento, aplicacaoAplicada, cancellationToken);
 
             var requestSource = HttpContextAccessor?.HttpContext?.Request.Host.Value ?? throw new ArgumentNullException(nameof(HttpContextAccessor));
 

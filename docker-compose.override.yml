@@ -2,26 +2,26 @@ version: '3.4'
 
 services:
    
-  mongo.db:
-    container_name: mongo-db
-    image: mongo
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: imroot
+  #mongo.db:
+  #  container_name: mongo-db
+  #  image: mongo
+  #  restart: always
+  #  environment:
+  #    MONGO_INITDB_ROOT_USERNAME: root
+  #    MONGO_INITDB_ROOT_PASSWORD: imroot
 
-  mongo.explorer:
-    container_name: mongo-gui
-    image: mongo-express
-    restart: always
-    ports:
-      - 8081:8081
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example
-      ME_CONFIG_MONGODB_URL: mongodb://root:imroot@mongo.db:27017/
-    depends_on:
-      - mongo.db
+  #mongo.explorer:
+  #  container_name: mongo-gui
+  #  image: mongo-express
+  #  restart: always
+  #  ports:
+  #    - 8081:8081
+  #  environment:
+  #    ME_CONFIG_MONGODB_ADMINUSERNAME: root
+  #    ME_CONFIG_MONGODB_ADMINPASSWORD: example
+  #    ME_CONFIG_MONGODB_URL: mongodb://root:imroot@mongo.db:27017/
+  #  depends_on:
+  #    - mongo.db
 
 
   zookeeper:
@@ -88,7 +88,8 @@ services:
   Jenner.Agendamento.API:
     environment:
       - ConnectionStrings__KafkaBootstrap=kafka:29092
-      - ConnectionStrings__MongoDb=mongodb://root:imroot@mongo.db:27017/
+      # - ConnectionStrings__MongoDb=mongodb://root:imroot@mongo.db:27017/
+      - ConnectionStrings__MongoDb=mongodb+srv://jennermonolith:D2RDqXHhqTnuwbot@jennermonolith.jpj80ow.mongodb.net/?retryWrites=true&w=majority
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
     ports:
@@ -99,12 +100,13 @@ services:
     depends_on:
       - kafka
       - zookeeper
-      - mongo.db
+      #- mongo.db
 
   Jenner.Aplicacao.API:
     environment:
       - ConnectionStrings__KafkaBootstrap=kafka:29092
-      - ConnectionStrings__MongoDb=mongodb://root:imroot@mongo.db:27017/
+      #- ConnectionStrings__MongoDb=mongodb://root:imroot@mongo.db:27017/
+      - ConnectionStrings__MongoDb=mongodb+srv://jennermonolith:D2RDqXHhqTnuwbot@jennermonolith.jpj80ow.mongodb.net/?retryWrites=true&w=majority
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
     ports:
@@ -115,7 +117,7 @@ services:
     depends_on:
       - kafka
       - zookeeper
-      - mongo.db
+      #- mongo.db
 
   Jenner.Carteira.Agendador.Worker:
     ports:
@@ -123,18 +125,20 @@ services:
 
     environment:
       - ConnectionStrings__KafkaBootstrap=kafka:29092
-      - ConnectionStrings__MongoDb=mongodb://root:imroot@mongo.db:27017/
+      #- ConnectionStrings__MongoDb=mongodb://root:imroot@mongo.db:27017/
+      - ConnectionStrings__MongoDb=mongodb+srv://jennermonolith:D2RDqXHhqTnuwbot@jennermonolith.jpj80ow.mongodb.net/?retryWrites=true&w=majority
       - ASPNETCORE_ENVIRONMENT=Development
       - HeartbeatConfiguration__TcpPort=7777
     depends_on:
       - kafka
       - zookeeper
-      - mongo.db
+      #- mongo.db
 
   Jenner.Carteira.API:
     environment:
       - ConnectionStrings__KafkaBootstrap=kafka:29092
-      - ConnectionStrings__MongoDb=mongodb://root:imroot@mongo.db:27017/
+      #- ConnectionStrings__MongoDb=mongodb://root:imroot@mongo.db:27017/
+      - ConnectionStrings__MongoDb=mongodb+srv://jennermonolith:D2RDqXHhqTnuwbot@jennermonolith.jpj80ow.mongodb.net/?retryWrites=true&w=majority
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
     ports:
@@ -145,4 +149,4 @@ services:
     depends_on:
       - kafka
       - zookeeper
-      - mongo.db
+      #- mongo.db

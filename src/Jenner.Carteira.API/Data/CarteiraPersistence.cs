@@ -50,43 +50,24 @@ namespace Jenner.Carteira.API.Data
             return carteira;
         }
 
-        public static async Task<Comum.Models.Carteira> FindOrCreateAsync(this IMongoCollection<CarteiraPersistence> collection, string cpf, string nomePessoa, DateTime dataNascimento, CancellationToken cancellationToken = default)
+        public static async Task<Comum.Models.Carteira> FindOrCreateAsync(this IMongoCollection<CarteiraPersistence> collection, string cpf, string nomePessoa, DateTime dataNascimento, Comum.Models.Aplicacao aplicacao, CancellationToken cancellationToken = default)
         {
-            CarteiraPersistence mongoResult = await collection
-                .Find(c => c.Cpf.Equals(cpf) && c.NomePessoa.Equals(nomePessoa))
-                .FirstOrDefaultAsync(cancellationToken);
-
-            if (mongoResult is null)
+            CarteiraPersistence novaCarteira = new CarteiraPersistence()
             {
-                Console.WriteLine("Não encontrou no banco... vamos criar");
-
-                CarteiraPersistence novaCarteira = new CarteiraPersistence()
+                Cpf = cpf,
+                NomePessoa = nomePessoa,
+                DataNascimento = dataNascimento,
+                Aplicacoes = new List<Comum.Models.Aplicacao>()
                 {
-                    Cpf = cpf,
-                    NomePessoa = nomePessoa,
-                    DataNascimento = dataNascimento
-                };
+                    aplicacao
+                },
+            };
 
-                novaCarteira.ValidaCarteira();
+            novaCarteira.ValidaCarteira();
 
-                mongoResult = await collection.InsertNewAsync(novaCarteira, cancellationToken);
+            novaCarteira = await collection.InsertNewAsync(novaCarteira, cancellationToken);
 
-                if (mongoResult is null)
-                {
-                    Console.WriteLine("Ainda não conseguiu criar, não sei o motivo");
-                }
-                else
-                {
-                    Console.WriteLine("Agora criou a carteira");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Carteira já existia no banco");
-
-            }
-
-            return mongoResult?.ToCarteira() ?? null;
+            return novaCarteira?.ToCarteira() ?? null;
         }
 
         public static async Task<Comum.Models.Carteira> UpdateAsync(this IMongoCollection<CarteiraPersistence> collection, CarteiraPersistence carteira, CancellationToken cancellationToken = default)

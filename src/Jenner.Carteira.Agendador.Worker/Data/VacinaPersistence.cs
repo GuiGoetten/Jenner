@@ -63,11 +63,8 @@ namespace Jenner.Carteira.Agendador.Worker.Data
                 .Find(c => c.NomeVacina == nomeVacina)
                 .FirstOrDefaultAsync(cancellationToken);
 
-
-
             if (mongoResult is null)
             {
-                Console.WriteLine("Não encontrou no banco... vamos criar");
 
                 VacinaPersistence novaVacina = new VacinaPersistence()
                 {
@@ -78,21 +75,8 @@ namespace Jenner.Carteira.Agendador.Worker.Data
                 };
 
                 mongoResult = await collection.InsertNewAsync(novaVacina, cancellationToken);
-
-                if (mongoResult is null)
-                {
-                    Console.WriteLine("Ainda não conseguiu criar, não sei o motivo");
-                }
-                else
-                {
-                    Console.WriteLine("Agora criou a vacina");
-                }
             }
-            else
-            {
-                Console.WriteLine("Carteira já existia no banco");
 
-            }
 
             return mongoResult?.ToVacina() ?? null;
         }

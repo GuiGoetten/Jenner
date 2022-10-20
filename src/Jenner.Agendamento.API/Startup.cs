@@ -15,6 +15,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using System;
 
 namespace Jenner.Agendamento.API
 {
@@ -90,7 +91,14 @@ namespace Jenner.Agendamento.API
         {
             services.AddSingleton(_ =>
             {
-                return new MongoClient(Configuration.GetConnectionString(Constants.MongoConnectionString));
+                MongoClientSettings settings = MongoClientSettings.FromConnectionString(Configuration.GetConnectionString(Constants.MongoConnectionString));
+                settings.WaitQueueSize = int.MaxValue;
+                settings.WaitQueueTimeout = new TimeSpan(0, 4, 0);
+                settings.MinConnectionPoolSize = 0;
+                settings.MaxConnectionPoolSize = 1000;
+
+                return new MongoClient(settings);
+                //return new MongoClient(Configuration.GetConnectionString(Constants.MongoConnectionString));
             });
             services.AddSingleton(sp =>
             {

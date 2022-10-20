@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
+using System;
 
 namespace Jenner.Carteira.API
 {
@@ -92,7 +93,14 @@ namespace Jenner.Carteira.API
         {
             services.AddSingleton(_ =>
             {
-                return new MongoClient(Configuration.GetConnectionString(Constants.MongoConnectionString));
+                MongoClientSettings settings = MongoClientSettings.FromConnectionString(Configuration.GetConnectionString(Constants.MongoConnectionString));
+                settings.WaitQueueSize = int.MaxValue;
+                settings.WaitQueueTimeout = new TimeSpan(0, 4, 0);
+                settings.MinConnectionPoolSize = 0;
+                settings.MaxConnectionPoolSize = 1000;
+
+                return new MongoClient(settings);
+                //return new MongoClient(Configuration.GetConnectionString(Constants.MongoConnectionString));
             });
             services.AddSingleton(sp =>
             {

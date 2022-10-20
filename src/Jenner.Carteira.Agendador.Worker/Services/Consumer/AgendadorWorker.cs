@@ -24,7 +24,6 @@ namespace Jenner.Carteira.Agendador.Worker.Services.Consumer
 
         protected override async Task DoScopedAsync(CancellationToken cancellationToken)
         {
-            Console.WriteLine("Teste");
             if (KafkaConsumer is null)
             {
                 throw new ArgumentException("For some reason the Consumer is null, this shouldn't happen.");
@@ -81,7 +80,6 @@ namespace Jenner.Carteira.Agendador.Worker.Services.Consumer
                     await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
                 }
             }
-            Console.WriteLine("SAI DO WHILE...");
 
         }
     }

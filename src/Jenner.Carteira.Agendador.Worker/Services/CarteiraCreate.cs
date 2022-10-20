@@ -33,10 +33,11 @@ namespace Jenner.Carteira.Agendador.Worker.Services
 
         public async Task<Unit> Handle(CarteiraCreate request, CancellationToken cancellationToken)
         {
-            Console.WriteLine("Buscando no banco...");
             Vacina vacinaResult = await MongoDatabase
                                         .GetVacinaCollection()
                                         .FindOrCreateAsync(request.UltimaAplicacao.NomeVacina, cancellationToken);
+
+            Aplicacao novoAgendamento = new(request.Cpf, request.NomePessoa, request.UltimaAplicacao.NomeVacina, request.UltimaAplicacao.Dose + 1, ((DateTime)request.UltimaAplicacao.DataAplicacao).AddDays(vacinaResult.Intervalo), null);
 
             if (request.UltimaAplicacao.Dose >= vacinaResult.Doses)
             {
@@ -45,15 +46,7 @@ namespace Jenner.Carteira.Agendador.Worker.Services
 
             Comum.Models.Carteira carteira = new Comum.Models.Carteira(request.Id, request.Cpf, request.NomePessoa, request.DataNascimento);
 
-            Console.WriteLine("Criando carteira....");
-
-            Aplicacao novoAgendamento = new(carteira.Cpf, carteira.NomePessoa, request.UltimaAplicacao.NomeVacina, request.UltimaAplicacao.Dose + 1, ((DateTime)request.UltimaAplicacao.DataAplicacao).AddDays(vacinaResult.Intervalo), null);
-
-            Console.WriteLine("Criando aplicacao....");
-
             Comum.Models.Carteira carteiraSend = carteira.AddAplicacao(novoAgendamento);
-
-            Console.WriteLine("Adicionei agendamento....");
 
             var cloudEvent = new CloudEvent
             {

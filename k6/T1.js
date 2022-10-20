@@ -13,12 +13,12 @@ const csvData = new SharedArray('teste', function () {
 export let options = {
     insecureSkipTLSVerify: true,
     noConnectionReuse: false,
+    //duration: "10s", target: 1
     stages: [
         // Ramp-up from 1 to 60 VUs in 60s
-        { duration: "10s", target: 500 },
-        { duration: "10s", target: 1000},
-        { duration: "10s", target: 1500 },
-        { duration: "10s", target: 2000 }
+        { duration: "60s", target: 1500 },
+        { duration: "60s", target: 3000 },
+        { duration: "60s", target: 4500 }
     ]
 };
 
@@ -36,10 +36,18 @@ export default function() {
     })
     //console.log(final);
 
-    let res = http.post("http://localhost:5030/api", final, {
+    //Microsservices
+    // let res = http.post("http://apps.minikube.vacinacao.aplicar:32550/api", final, {
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //       },
+    //     });
+
+    //Monolito
+    let res = http.post("http://localhost:6020/api/aplicacao", final, {
         headers: {
           'Content-Type': 'application/json',
-        }
+        },
       });
     sleep(10);
 }

@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,12 +13,14 @@ namespace Jenner.Aplicacao.API.Controllers
     public class AplicacaoController : ControllerBase
     {
         private readonly ISender sender;
+        private readonly ILogger<AplicacaoController> logger;
 
         private CancellationToken Token => HttpContext?.RequestAborted ?? default;
 
-        public AplicacaoController(ISender sender)
+        public AplicacaoController(ISender sender, ILogger<AplicacaoController> logger)
         {
             this.sender = sender ?? throw new System.ArgumentNullException(nameof(sender));
+            this.logger = logger ?? throw new System.ArgumentNullException(nameof(logger));
         }
 
         [HttpPost]
@@ -32,7 +35,8 @@ namespace Jenner.Aplicacao.API.Controllers
             }
             catch (System.Exception e)
             {
-                return BadRequest(e.Message);
+                logger.LogError(e, "Um erro aconteceu");
+                return BadRequest();
             }
 
             return Ok(result);
