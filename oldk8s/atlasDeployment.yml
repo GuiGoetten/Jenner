@@ -1,0 +1,14 @@
+apiVersion: atlas.mongodb.com/v1
+kind: AtlasDeployment
+metadata:
+  name: jenner-monolith
+spec:
+  projectRef:
+    name: jenner-monolith
+  deploymentSpec:
+    name: JennerMonolith
+    providerSettings:
+      instanceSizeName: M0
+      providerName: TENANT
+      regionName: US_EAST_2
+      backingProviderName: AZURE
