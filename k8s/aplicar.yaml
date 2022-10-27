@@ -35,7 +35,7 @@ spec:
             - name: ConnectionStrings__KafkaBootstrap
               value: kafka-service:29092
             - name: ConnectionStrings__MongoDb
-              value: mongodb://root:imroot@mongo-db:27017/
+              value: mongodb+srv://jennermonolith:250793@jennermonolith.l8egivl.mongodb.net/?retryWrites=true&w=majority
           readinessProbe:
             httpGet:
               path: /ready # endpoint for readiness check; must return a 200 while pod is ready

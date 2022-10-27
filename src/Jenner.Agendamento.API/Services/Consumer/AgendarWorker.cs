@@ -68,10 +68,6 @@ namespace Jenner.Agendamento.API.Services.Consumer
                 {
                     Console.WriteLine(ex.Message);
                 }
-                finally
-                {
-                    await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
-                }
             }
         }
 
