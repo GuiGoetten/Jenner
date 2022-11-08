@@ -50,22 +50,18 @@ namespace Jenner.Carteira.Agendador.Worker.Data
 
         public static async Task<VacinaPersistence> InsertNewAsync(this IMongoCollection<VacinaPersistence> collection, VacinaPersistence vacina, CancellationToken cancellationToken = default)
         {
-
             await collection.InsertOneAsync(vacina, null, cancellationToken);
             return vacina;
         }
 
         public static async Task<Vacina> FindOrCreateAsync(this IMongoCollection<VacinaPersistence> collection, string nomeVacina, CancellationToken cancellationToken = default)
         {
-            VacinaPersistence mongoResult = null;
-
-            mongoResult = await collection
+            VacinaPersistence mongoResult = await collection
                 .Find(c => c.NomeVacina == nomeVacina)
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (mongoResult is null)
             {
-
                 VacinaPersistence novaVacina = new VacinaPersistence()
                 {
                     NomeVacina = nomeVacina,
@@ -76,8 +72,6 @@ namespace Jenner.Carteira.Agendador.Worker.Data
 
                 mongoResult = await collection.InsertNewAsync(novaVacina, cancellationToken);
             }
-
-
             return mongoResult?.ToVacina() ?? null;
         }
 
