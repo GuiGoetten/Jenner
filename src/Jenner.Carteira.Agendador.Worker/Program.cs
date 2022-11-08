@@ -56,7 +56,6 @@ namespace Jenner.Carteira.Agendador.Worker
         {
 
             // Producer
-
             services.AddSingleton(c =>
             {
                 var config = new ProducerConfig
@@ -74,13 +73,12 @@ namespace Jenner.Carteira.Agendador.Worker
                 {
                     BootstrapServers = configuration.GetConnectionString(@"KafkaBootstrap"),
                     GroupId = "agendador-worker",
-                    AutoOffsetReset = AutoOffsetReset.Earliest
+                    AutoOffsetReset = AutoOffsetReset.Latest
                 };
                 return new ConsumerBuilder<string, byte[]>(config).Build();
             });
             
             //Cloud Event Formatter
-
             services.AddSingleton<CloudEventFormatter>(new JsonEventFormatter());
         }
 
