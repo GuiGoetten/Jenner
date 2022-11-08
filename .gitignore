@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# JetBrain's IDEs
+.idea/.idea.Jenner/.idea/dictionaries/
