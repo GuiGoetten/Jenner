@@ -16,7 +16,7 @@ export let options = {
     //duration: "1800s", target: 10000
     stages: [
         { duration: "1s", target: 1 },
-        { duration: "300s", target: 1500 }
+        { duration: "1800s", target: 1500 }
     ]
 };
 
@@ -35,13 +35,6 @@ export default function() {
     //console.log(final);
 
     //Microsservices
-    // let res = http.post("http://apps.minikube.vacinacao.aplicar:32550/api", final, {
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //     });
-
-    //Monolito
     let res = http.post("http://apps.minikube.vacinacao.aplicar:30910/api", final, {
         headers: {
           'Content-Type': 'application/json',
