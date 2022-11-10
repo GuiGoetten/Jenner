@@ -23,7 +23,7 @@ namespace Jenner.Carteira.Agendador.Worker.Providers
             cloudEventFormatter = formatter ?? new JsonEventFormatter();
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
 
             KafkaConsumer = serviceProvider
@@ -31,7 +31,7 @@ namespace Jenner.Carteira.Agendador.Worker.Providers
                 .GetRequiredService<IConsumer<string, byte[]>>();
 
 
-            await Task.Run(() => DoScopedAsync(stoppingToken), stoppingToken);  // TALVEZ PRECISE MUDAR AQUI
+            await Task.Run(function: async () => await DoScopedAsync(cancellationToken), cancellationToken);  // TALVEZ PRECISE MUDAR AQUI
 
         }
 

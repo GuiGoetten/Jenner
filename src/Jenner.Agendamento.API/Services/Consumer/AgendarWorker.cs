@@ -64,7 +64,7 @@ namespace Jenner.Agendamento.API.Services.Consumer
                                 Dose = carteira.GetLatestAplicacao().Dose
                             };
                             _logger.LogDebug("Creating a new Agendamento for cpf {carteiraCpf}", carteira.Cpf);
-                            Aplicacao aplicacaoResult = await sender.Send(novoAgendamento, cancellationToken);
+                            await sender.Send(novoAgendamento, cancellationToken);
                         }
                         catch (Exception e)
                         {

@@ -1,6 +1,6 @@
 import papaparse from 'https://jslib.k6.io/papaparse/5.1.1/index.js';
 import http from 'k6/http';
-import { sleep } from 'k6';
+import { check, sleep } from 'k6';
 import { SharedArray } from 'k6/data';
 
 //const data = open("./dados.csv");
@@ -11,9 +11,26 @@ const csvData = new SharedArray('teste', function () {
   });
 
 export let options = {
-    insecureSkipTLSVerify: true,
-    noConnectionReuse: false,
-    duration: "1800s", target: 10000
+    insecureSkipTLSVerify: true,    
+    stages: [
+      { duration: "2m", target: 10 },
+      { duration: "2m", target: 100 },
+      { duration: "2m", target: 1000 },
+      { duration: "2m", target: 100 },
+      { duration: "2m", target: 10 },
+      { duration: "1m", target: 1 },
+      { duration: "2m", target: 10 },
+      { duration: "2m", target: 100 },
+      { duration: "2m", target: 1000 },
+      { duration: "2m", target: 100 },
+      { duration: "2m", target: 10 },
+      { duration: "1m", target: 1 },
+      { duration: "2m", target: 10 },
+      { duration: "2m", target: 100 },
+      { duration: "2m", target: 1000 },
+      { duration: "2m", target: 100 },
+      { duration: "2m", target: 10 },
+    ]
 };
 
 export default function() {
@@ -25,8 +42,8 @@ export default function() {
         "dataNascimento": randomUser[2],
         "nomeVacina": "Pfizer",
         "dose": 1,
-        "dataAgendamento": "2022-11-15",
-        "dataAplicada": "2022-11-15"
+        "dataAgendamento": "2022-12-15",
+        "dataAplicada": "2022-12-15"
     })
     //console.log(final);
 
@@ -35,6 +52,11 @@ export default function() {
         headers: {
           'Content-Type': 'application/json',
         },
+        timeout: "120s"
       });
+
+    check(res, {
+      'response wasnt an error': (res) => res.status == 200
+    })
     sleep(10);
 }

@@ -37,7 +37,7 @@ spec:
             - name: ConnectionStrings__KafkaBootstrap
               value: kafka-service:29092
             - name: ConnectionStrings__MongoDb
-              value: mongodb+srv://jennermonolith:250793@jennermonolith.l8egivl.mongodb.net/?retryWrites=true&w=majority
+              value: mongodb+srv://jennermicroservices:B7fGAyzi3ZqJ7C4u@jennermicroservices.1mnmk4v.mongodb.net/?retryWrites=true&w=majority
 ---
 apiVersion: v1
 kind: Service
