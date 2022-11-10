@@ -50,7 +50,7 @@ namespace Jenner.Agendamento.API.Data
             return carteira;
         }
 
-        public static async Task<Carteira> FindOrCreateAsync(this IMongoCollection<CarteiraPersistence> collection, string cpf, string nomePessoa, DateTime dataNascimento, Comum.Models.Aplicacao aplicacao, CancellationToken cancellationToken = default)
+        public static async Task<Carteira> CreateAsync(this IMongoCollection<CarteiraPersistence> collection, string cpf, string nomePessoa, DateTime dataNascimento, Comum.Models.Aplicacao aplicacao, CancellationToken cancellationToken = default)
         {
             CarteiraPersistence novaCarteira = new CarteiraPersistence()
             {

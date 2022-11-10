@@ -24,26 +24,20 @@ namespace Jenner.Aplicacao.API.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Create([FromBody] AplicacaoCreate novaAplicacao)
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CreateAsync([FromBody] AplicacaoCreate novaAplicacao, CancellationToken cancellationToken)
         {
-            Comum.Models.Aplicacao result;
             try
             {
-               result = await sender.Send(novaAplicacao);
+                var aplicacao = await sender.Send(novaAplicacao, cancellationToken);
+                return Ok(aplicacao);
             }
             catch (System.Exception e)
             {
                 logger.LogError(e, "Um erro aconteceu");
-                return BadRequest();
+                return BadRequest(e);
             }
-
-            return Ok(result);
-
-            
-            //TODO: Arrumar o retorno, para retornar um 201 quando criado com sucesso + o objeto criado com o ID correto
-            //return CreatedAtAction(nameof(Aplicacao), result);
         }
     }
 }
