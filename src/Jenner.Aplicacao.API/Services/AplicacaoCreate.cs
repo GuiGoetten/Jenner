@@ -1,5 +1,6 @@
 ﻿using CloudNative.CloudEvents;
 using Confluent.Kafka;
+using DnsClient.Internal;
 using Jenner.Aplicacao.API.Data;
 using Jenner.Aplicacao.API.Providers;
 using Jenner.Comum;
@@ -7,6 +8,7 @@ using Jenner.Comum.Models;
 using Jenner.Comum.Models.Validators;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using System;
 using System.Threading;
@@ -27,27 +29,46 @@ namespace Jenner.Aplicacao.API.Services
 
     public class AplicacaoCreateHandler : KafkaPublisherBase, IRequestHandler<AplicacaoCreate, Comum.Models.Aplicacao>
     {
-        private IHttpContextAccessor HttpContextAccessor { get; }
-        private readonly IMongoDatabase MongoDatabase;
+        private IHttpContextAccessor _httpContextAccessor { get; }
+        private readonly IMongoDatabase _mongoDb;
+        private readonly ILogger<AplicacaoCreateHandler> _logger;
 
-        public AplicacaoCreateHandler(IHttpContextAccessor httpContextAccessor, IProducer<string, byte[]> producer, CloudEventFormatter cloudEventFormatter, IMongoDatabase mongoDatabase) :
+        public AplicacaoCreateHandler(IHttpContextAccessor httpContextAccessor,
+            IProducer<string, byte[]> producer, 
+            CloudEventFormatter cloudEventFormatter, 
+            IMongoDatabase mongoDatabase,
+            ILogger<AplicacaoCreateHandler> logger
+            ) :
             base(producer, cloudEventFormatter, Constants.CloudEvents.AplicadaTopic)
         {
-            HttpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-            MongoDatabase = mongoDatabase ?? throw new ArgumentNullException(nameof(mongoDatabase));
+            _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+            _mongoDb = mongoDatabase ?? throw new ArgumentNullException(nameof(mongoDatabase));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task<Comum.Models.Aplicacao> Handle(AplicacaoCreate request, CancellationToken cancellationToken)
         {
+            _logger.LogDebug("Recebido command para criar uma Aplicação: {userCpf}", request.Cpf);
             Comum.Models.Aplicacao aplicacaoAplicada = new(request.Cpf, request.NomePessoa, request.NomeVacina, request.Dose, request.DataAgendamento, request.DataAplicada);
 
             aplicacaoAplicada.ValidaAplicacao();
+            _logger.LogDebug("Aplicacao validada: {userCpf)", request.Cpf);
 
-            Carteira carteiraResult = await MongoDatabase
+
+            _logger.LogDebug("Criando uma carteira no banco");
+            Carteira carteiraResult = await _mongoDb
                 .GetCarteiraCollection()
-                .FindOrCreateAsync(request.Cpf, request.NomePessoa, request.DataNascimento, aplicacaoAplicada, cancellationToken);
+                .CreateAsync(request.Cpf, request.NomePessoa, request.DataNascimento, aplicacaoAplicada, cancellationToken,cart =>
+                {
+                    if(cart is not null)
+                    {
+                        _logger.LogDebug("Carteira persistida com o ID {carteiraId} e Usuário {userCpf}", cart.Id, cart.Cpf);
+                    }
+                });
 
-            var requestSource = HttpContextAccessor?.HttpContext?.Request.Host.Value ?? throw new ArgumentNullException(nameof(HttpContextAccessor));
+
+            string requestSource = _httpContextAccessor?.HttpContext?.Request.Host.Value
+                                   ?? throw new ArgumentNullException(nameof(_httpContextAccessor));
 
             var cloudEvent = new CloudEvent
             {
@@ -56,11 +77,14 @@ namespace Jenner.Aplicacao.API.Services
                 Source = new UriBuilder(requestSource).Uri,
                 Data = carteiraResult
             };
+            
+            _logger.LogDebug("Enviando a carteira criada para o usuário {userCpf} para o serviço de mensageria", request.Cpf);
 
-            //TODO: Fazer esse trem ficar assíncrono de verdade
             await PublishToKafka(cloudEvent, cancellationToken);
 
-            return await Task.FromResult(aplicacaoAplicada);
+            _logger.LogDebug("Carteira o usuário {userCpf} enviada para a mensageria", carteiraResult.Cpf);
+
+            return aplicacaoAplicada;
         }
     }
 }
