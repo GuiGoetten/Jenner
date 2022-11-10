@@ -23,13 +23,13 @@ namespace Jenner.Agendamento.API.Providers
             cloudEventFormatter = formatter ?? new JsonEventFormatter();
         }
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
 
             KafkaConsumer = serviceProvider
                 .CreateScope().ServiceProvider
                 .GetRequiredService<IConsumer<string, byte[]>>();
-            return Task.Run(() => DoScopedAsync(stoppingToken), stoppingToken);  // TALVEZ PRECISE MUDAR AQUI
+            await Task.Run(async () => await DoScopedAsync(stoppingToken), stoppingToken);  // TALVEZ PRECISE MUDAR AQUI
         }
 
         protected abstract Task DoScopedAsync(CancellationToken cancellationToken);
