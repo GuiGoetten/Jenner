@@ -26,14 +26,14 @@ namespace Jenner.Carteira.API.Services
 
     public class CarteiraCreateHandler : KafkaPublisherBase, IRequestHandler<CarteiraCreate, Comum.Models.Carteira>
     {
-        private IHttpContextAccessor HttpContextAccessor { get; }
-        private readonly IMongoDatabase MongoDatabase;
+        private IHttpContextAccessor _httpContextAccessor { get; }
+        private readonly IMongoDatabase _mongoDb;
 
         public CarteiraCreateHandler(IHttpContextAccessor httpContextAccessor, IProducer<string, byte[]> producer, CloudEventFormatter cloudEventFormatter, IMongoDatabase mongoDatabase) :
             base(producer, cloudEventFormatter, Constants.CloudEvents.AplicadaTopic)
         {
-            HttpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-            MongoDatabase = mongoDatabase ?? throw new ArgumentNullException(nameof(mongoDatabase));
+            _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+            _mongoDb = mongoDatabase ?? throw new ArgumentNullException(nameof(mongoDatabase));
         }
 
         public async Task<Comum.Models.Carteira> Handle(CarteiraCreate request, CancellationToken cancellationToken)
@@ -42,11 +42,9 @@ namespace Jenner.Carteira.API.Services
             
             aplicacaoAplicada.ValidaAplicacao();
 
-            Comum.Models.Carteira carteiraResult = await MongoDatabase
+            return await _mongoDb
                 .GetCarteiraCollection()
-                .FindOrCreateAsync(request.Cpf, request.NomePessoa, request.DataNascimento, aplicacaoAplicada, cancellationToken);
-
-            return await Task.FromResult(carteiraResult);
+                .CreateAsync(request.Cpf, request.NomePessoa, request.DataNascimento, aplicacaoAplicada, cancellationToken);
         }
     }
 }

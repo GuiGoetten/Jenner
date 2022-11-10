@@ -50,7 +50,7 @@ namespace Jenner.Aplicacao.API.Data
             return carteira;
         }
 
-        public static async Task<Carteira> FindOrCreateAsync(this IMongoCollection<CarteiraPersistence> collection, string cpf, string nomePessoa, DateTime dataNascimento, Comum.Models.Aplicacao aplicacao, CancellationToken cancellationToken = default)
+        public static async Task<Carteira> CreateAsync(this IMongoCollection<CarteiraPersistence> collection, string cpf, string nomePessoa, DateTime dataNascimento, Comum.Models.Aplicacao aplicacao, CancellationToken cancellationToken = default, Action<CarteiraPersistence> onComplete = null)
         {
             CarteiraPersistence novaCarteira = new CarteiraPersistence()
             {
@@ -67,7 +67,9 @@ namespace Jenner.Aplicacao.API.Data
 
             novaCarteira = await collection.InsertNewAsync(novaCarteira, cancellationToken);
 
-            return novaCarteira?.ToCarteira() ?? null;
+            onComplete?.Invoke(novaCarteira);
+
+            return novaCarteira?.ToCarteira();
         }
 
         public static async Task<Carteira> UpdateAsync(this IMongoCollection<CarteiraPersistence> collection, CarteiraPersistence carteira, CancellationToken cancellationToken = default)

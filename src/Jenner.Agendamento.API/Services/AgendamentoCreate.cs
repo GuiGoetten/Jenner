@@ -44,7 +44,7 @@ namespace Jenner.Agendamento.API.Services
 
             Carteira carteiraResult = await MongoDatabase
                 .GetCarteiraCollection()
-                .FindOrCreateAsync(request.Cpf, request.NomePessoa, request.DataNascimento, aplicacaoAgendada, cancellationToken);
+                .CreateAsync(request.Cpf, request.NomePessoa, request.DataNascimento, aplicacaoAgendada, cancellationToken);
 
             var requestSource = HttpContextAccessor?.HttpContext?.Request.Host.Value ?? "FromAgendador";
 
@@ -56,10 +56,9 @@ namespace Jenner.Agendamento.API.Services
                 Data = carteiraResult
             };
 
-            //TODO: Fazer esse trem ficar assíncrono de verdade
             await PublishToKafka(cloudEvent, cancellationToken);
 
-            return await Task.FromResult(aplicacaoAgendada);
+            return aplicacaoAgendada;
         }
 
     }
