@@ -67,7 +67,7 @@ namespace Jenner.Agendamento.API.Data
 
             novaCarteira = await collection.InsertNewAsync(novaCarteira, cancellationToken);
 
-            return novaCarteira?.ToCarteira();
+            return novaCarteira?.ToCarteira() ?? null;
         }
 
         public static async Task<Carteira> UpdateAsync(this IMongoCollection<CarteiraPersistence> collection, CarteiraPersistence carteira, CancellationToken cancellationToken = default)

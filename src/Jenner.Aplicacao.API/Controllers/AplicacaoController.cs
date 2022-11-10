@@ -31,7 +31,7 @@ namespace Jenner.Aplicacao.API.Controllers
             try
             {
                 var aplicacao = await sender.Send(novaAplicacao, cancellationToken);
-                return Ok();
+                return Ok(aplicacao);
             }
             catch (System.Exception e)
             {
