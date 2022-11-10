@@ -24,13 +24,14 @@ namespace Jenner.Aplicacao.API.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateAsync([FromBody] AplicacaoCreate novaAplicacao, CancellationToken cancellationToken)
         {
             try
             {
-               return CreatedAtAction(nameof(Comum.Models.Aplicacao),await sender.Send(novaAplicacao, cancellationToken));
+                var aplicacao = await sender.Send(novaAplicacao, cancellationToken);
+                return Ok();
             }
             catch (System.Exception e)
             {
