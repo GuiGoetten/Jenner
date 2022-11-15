@@ -14,7 +14,7 @@ export let options = {
     insecureSkipTLSVerify: true,    
     stages: [
         { duration: "1s", target: 1 },
-        { duration: "10m", target: 5000 }
+        { duration: "30m", target: 10000 }
     ]
 };
 

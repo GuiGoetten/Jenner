@@ -1,4 +1,5 @@
 ﻿using Jenner.Aplicacao.API.Services;
+using Jenner.Aplicacao.API.Services.Producer;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,12 +27,12 @@ namespace Jenner.Aplicacao.API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreateAsync([FromBody] AplicacaoCreate novaAplicacao, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateAsync([FromBody] AplicarCreate novaAplicacao, CancellationToken cancellationToken)
         {
             try
             {
                 var aplicacao = await sender.Send(novaAplicacao, cancellationToken);
-                return Ok(aplicacao);
+                return Accepted(aplicacao);
             }
             catch (System.Exception e)
             {
