@@ -52,7 +52,7 @@ namespace Jenner.Agendamento.API.Services.Consumer
                     if (cloudEvent.Data is Carteira mensagem)
                     {
                         _logger.LogDebug("The message is a Carteira with the cpf {carteiraCpf}", mensagem.Cpf);
-                        _ = CriaCarteiraAsync(mensagem, cancellationToken);
+                        await CriaCarteiraAsync(mensagem, cancellationToken).ConfigureAwait(false);
                     }
                 }
                 catch (ConsumeException e)
