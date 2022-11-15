@@ -1,9 +1,12 @@
-﻿using CloudNative.CloudEvents.Kafka;
+﻿using CloudNative.CloudEvents;
+using CloudNative.CloudEvents.Kafka;
 using CloudNative.CloudEvents.SystemTextJson;
 using Confluent.Kafka;
+using DnsClient.Internal;
 using Jenner.Aplicacao.API.Providers;
 using Jenner.Comum;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,10 +16,13 @@ namespace Jenner.Aplicacao.API.Services.Consumer
     public class AplicacaoWorker : KafkaConsumerBase
     {
         public ISender sender;
-        public AplicacaoWorker(IServiceProvider serviceProvider, ISender sender) :
+        private readonly ILogger<AplicacaoWorker> _logger;
+
+        public AplicacaoWorker(IServiceProvider serviceProvider, ISender sender, ILogger<AplicacaoWorker> logger) :
             base(serviceProvider, new JsonEventFormatter<string>())
         {
             this.sender = sender ?? throw new ArgumentNullException(nameof(sender));
+            this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         protected override async Task DoScopedAsync(CancellationToken cancellationToken)
@@ -36,24 +42,29 @@ namespace Jenner.Aplicacao.API.Services.Consumer
                     var cloudEvent = result.Message.ToCloudEvent(cloudEventFormatter);
                     if (cloudEvent.Data is AplicacaoCreate mensagem)
                     {
-                        try
-                        {
-                            await sender.Send(cloudEvent.Data as AplicacaoCreate);
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine($"Não recebi uma aplicacao {e.Message}");
-                        }
+                        _ = CriaAplicacaoAsync(mensagem, cancellationToken);
                     }
                 }
                 catch (ConsumeException e)
                 {
-                    Console.WriteLine($"Error occured: {e.Error.Reason}");
+                    _logger.LogError(e, "Error while parsing message, discarding it");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    _logger.LogError(ex, "A catastrophic error happened: {errorMessage}", ex.Message);
+                    throw;
                 }
+            }
+        }
+        private async Task CriaAplicacaoAsync(AplicacaoCreate mensagem, CancellationToken cancellationToken)
+        {
+            try
+            {
+                await sender.Send(mensagem, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Unexpected behavior while creating aplicacao: {errorMessage}", e.Message);
             }
         }
 

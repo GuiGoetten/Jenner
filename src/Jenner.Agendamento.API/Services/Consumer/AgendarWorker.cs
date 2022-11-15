@@ -34,54 +34,59 @@ namespace Jenner.Agendamento.API.Services.Consumer
                 throw new ArgumentException("For some reason the Consumer is null, this shouldn't happen.");
             }
 
-            _logger.LogDebug("Subscribing Agendar Worker to the topic {agendarTopic}", Constants.CloudEvents.AgendarTopic);
+            _logger.LogDebug("Subscribing to topic {kafkaTopic}", Constants.CloudEvents.AplicadaTopic);
             KafkaConsumer.Subscribe(Constants.CloudEvents.AgendarTopic);
 
-            _logger.LogDebug("Reading the topic {agendarTopic}", Constants.CloudEvents.AgendarTopic);
             while (!cancellationToken.IsCancellationRequested)
             {
                 try
                 {
-
+                    _logger.LogDebug("Cancellation Status: {cancelStatus}", cancellationToken.IsCancellationRequested);
+                    _logger.LogDebug("Waiting to Consume from topic...");
                     ConsumeResult<string, byte[]> result = KafkaConsumer.Consume(cancellationToken);
                     
                     var cloudEvent = result.Message.ToCloudEvent(cloudEventFormatter);
 
                     _logger.LogDebug("A new wild message appears");
 
-                    if (cloudEvent.Data is Carteira carteira)
+                    if (cloudEvent.Data is Carteira mensagem)
                     {
-                        _logger.LogDebug("The message is a Carteira with the cpf {carteiraCpf}", carteira.Cpf);
-                        try 
-                        {
-                            AgendamentoCreate novoAgendamento = new AgendamentoCreate
-                            {
-                                Cpf = carteira.Cpf,
-                                NomePessoa = carteira.NomePessoa,
-                                DataNascimento = carteira.DataNascimento,
-                                DataAgendamento = carteira.GetLatestAplicacao().DataAgendamento,
-                                NomeVacina = carteira.GetLatestAplicacao().NomeVacina,
-                                Dose = carteira.GetLatestAplicacao().Dose
-                            };
-                            _logger.LogDebug("Creating a new Agendamento for cpf {carteiraCpf}", carteira.Cpf);
-                            await sender.Send(novoAgendamento, cancellationToken);
-                        }
-                        catch (Exception e)
-                        {
-                            _logger.LogError(e, "O valor recebido não é uma plicação válida");
-                        }
+                        _logger.LogDebug("The message is a Carteira with the cpf {carteiraCpf}", mensagem.Cpf);
+                        _ = CriaCarteiraAsync(mensagem, cancellationToken);
                     }
                 }
                 catch (ConsumeException e)
                 {
-                    _logger.LogError(e, "Error occured");
+                    _logger.LogError(e, "Error while parsing message, discarding it");
+
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    _logger.LogError(e, e.Message);
+                    _logger.LogError(ex, "A catastrophic error happened: {errorMessage}", ex.Message);
+                    throw;
                 }
             }
         }
-
+        private async Task CriaCarteiraAsync(Carteira mensagem, CancellationToken cancellationToken)
+        {
+            try
+            {
+                AgendamentoCreate novoAgendamento = new AgendamentoCreate
+                {
+                    Cpf = mensagem.Cpf,
+                    NomePessoa = mensagem.NomePessoa,
+                    DataNascimento = mensagem.DataNascimento,
+                    DataAgendamento = mensagem.GetLatestAplicacao().DataAgendamento,
+                    NomeVacina = mensagem.GetLatestAplicacao().NomeVacina,
+                    Dose = mensagem.GetLatestAplicacao().Dose
+                };
+                _logger.LogDebug("Creating a new Agendamento for cpf {carteiraCpf}", mensagem.Cpf);
+                await sender.Send(novoAgendamento, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "O valor recebido não é uma plicação válida");
+            }
+        }
     }
 }

@@ -45,23 +45,7 @@ namespace Jenner.Carteira.Agendador.Worker.Services.Consumer
 
                     if (cloudEvent.Data is Comum.Models.Carteira mensagem)
                     {
-                        try
-                        {
-                            CarteiraCreate carteiraCreate = new CarteiraCreate
-                            {
-                                Id = mensagem.Id,
-                                Cpf = mensagem.Cpf,
-                                NomePessoa = mensagem.NomePessoa,
-                                DataNascimento = mensagem.DataNascimento,
-                                UltimaAplicacao = mensagem.GetLatestAplicacao()
-                            };
-
-                            await _sender.Send(carteiraCreate, cancellationToken);
-                        }
-                        catch (Exception e)
-                        {
-                            _logger.LogError(e, "Unexpected behavior while creating carteira: {errorMessage}", e.Message);
-                        }
+                        _ = CriaCarteiraAsync(mensagem, cancellationToken);
                     }
                     else
                     {
@@ -78,7 +62,27 @@ namespace Jenner.Carteira.Agendador.Worker.Services.Consumer
                     throw;
                 }
             }
+        }
 
+        private async Task CriaCarteiraAsync(Comum.Models.Carteira mensagem, CancellationToken cancellationToken)
+        {
+            try
+            {
+                CarteiraCreate carteiraCreate = new CarteiraCreate
+                {
+                    Id = mensagem.Id,
+                    Cpf = mensagem.Cpf,
+                    NomePessoa = mensagem.NomePessoa,
+                    DataNascimento = mensagem.DataNascimento,
+                    UltimaAplicacao = mensagem.GetLatestAplicacao()
+                };
+
+                await _sender.Send(carteiraCreate, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Unexpected behavior while creating carteira: {errorMessage}", e.Message);
+            }
         }
     }
 }
