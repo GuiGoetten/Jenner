@@ -4,6 +4,7 @@ using Confluent.Kafka;
 using Jenner.Carteira.API.Providers;
 using Jenner.Comum;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,18 +13,21 @@ namespace Jenner.Carteira.API.Services.Consumer
 {
     public class CarteiraAgendadaWorker : KafkaConsumerBase
     {
-        public ISender sender;
-        public CarteiraAgendadaWorker(IServiceProvider serviceProvider, ISender sender) :
+        private readonly ISender _sender;
+        private readonly ILogger<CarteiraAgendadaWorker> _logger;
+
+        public CarteiraAgendadaWorker(IServiceProvider serviceProvider, ISender sender, ILogger<CarteiraAgendadaWorker> logger) :
             base(serviceProvider, new JsonEventFormatter<Comum.Models.Carteira>())
         {
-            this.sender = sender ?? throw new ArgumentNullException(nameof(sender));
+            _sender = sender ?? throw new ArgumentNullException(nameof(sender));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         protected override async Task DoScopedAsync(CancellationToken cancellationToken)
         {
             if (KafkaConsumer is null)
             {
-                throw new ArgumentException("For some reason the Consumer is null, this shouldn't happen.");
+                throw new ArgumentNullException("For some reason the Consumer is null, this shouldn't happen.");
             }
 
             KafkaConsumer.Subscribe(Constants.CloudEvents.AgendadaTopic);
@@ -37,35 +41,41 @@ namespace Jenner.Carteira.API.Services.Consumer
                     var cloudEvent = result.Message.ToCloudEvent(cloudEventFormatter);
                     if (cloudEvent.Data is Comum.Models.Carteira mensagem)
                     {
-                        try
-                        {
-                            CarteiraCreate carteiraCreate = new CarteiraCreate
-                            {
-                                Cpf = mensagem.Cpf,
-                                NomePessoa = mensagem.NomePessoa,
-                                DataNascimento = mensagem.DataNascimento,
-                                DataAgendamento = mensagem.GetLatestAplicacao().DataAgendamento,
-                                NomeVacina = mensagem.GetLatestAplicacao().NomeVacina,
-                                Dose = mensagem.GetLatestAplicacao().Dose,
-                                DataAplicada = mensagem.GetLatestAplicacao().DataAplicacao
-                            };
-
-                            await sender.Send(carteiraCreate, cancellationToken);
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine($"Não rexebi um agendamento {e.Message}");
-                        }
+                        _ = CriaCarteiraAsync(mensagem, cancellationToken);
                     }
                 }
                 catch (ConsumeException e)
                 {
-                    Console.WriteLine($"Error occured: {e.Error.Reason}");
+                    _logger.LogError(e, "Error while parsing message, discarding it");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    _logger.LogError(ex, "A catastrophic error happened: {errorMessage}", ex.Message);
+                    throw;
                 }
+            }
+        }
+
+        private async Task CriaCarteiraAsync(Comum.Models.Carteira mensagem, CancellationToken cancellationToken)
+        {
+            try
+            {
+                CarteiraCreate carteiraCreate = new CarteiraCreate
+                {
+                    Cpf = mensagem.Cpf,
+                    NomePessoa = mensagem.NomePessoa,
+                    DataNascimento = mensagem.DataNascimento,
+                    DataAgendamento = mensagem.GetLatestAplicacao().DataAgendamento,
+                    NomeVacina = mensagem.GetLatestAplicacao().NomeVacina,
+                    Dose = mensagem.GetLatestAplicacao().Dose,
+                    DataAplicada = mensagem.GetLatestAplicacao().DataAplicacao
+                };
+
+                await _sender.Send(carteiraCreate, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("Error ocurred, the message is not of type Agendamento: ", e.Message);
             }
         }
 

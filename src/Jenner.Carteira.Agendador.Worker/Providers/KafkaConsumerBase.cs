@@ -11,7 +11,7 @@ namespace Jenner.Carteira.Agendador.Worker.Providers
 {
     public abstract class KafkaConsumerBase : BackgroundService
     {
-        protected readonly IServiceProvider serviceProvider;
+        protected readonly IServiceProvider _serviceProvider;
         protected readonly CloudEventFormatter cloudEventFormatter;
         protected IConsumer<string, byte[]> KafkaConsumer { get; private set; } = null;
 
@@ -19,14 +19,14 @@ namespace Jenner.Carteira.Agendador.Worker.Providers
             IServiceProvider serviceProvider,
             CloudEventFormatter formatter = null)
         {
-            this.serviceProvider = serviceProvider;
+            _serviceProvider = serviceProvider;
             cloudEventFormatter = formatter ?? new JsonEventFormatter();
         }
 
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
 
-            KafkaConsumer = serviceProvider
+            KafkaConsumer = _serviceProvider
                 .CreateScope().ServiceProvider
                 .GetRequiredService<IConsumer<string, byte[]>>();
 
