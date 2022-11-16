@@ -1,5 +1,4 @@
-﻿using CloudNative.CloudEvents;
-using CloudNative.CloudEvents.Kafka;
+﻿using CloudNative.CloudEvents.Kafka;
 using CloudNative.CloudEvents.SystemTextJson;
 using Confluent.Kafka;
 using DnsClient.Internal;
