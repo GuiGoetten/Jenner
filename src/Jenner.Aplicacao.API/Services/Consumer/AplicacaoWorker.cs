@@ -41,7 +41,7 @@ namespace Jenner.Aplicacao.API.Services.Consumer
                     var cloudEvent = result.Message.ToCloudEvent(cloudEventFormatter);
                     if (cloudEvent.Data is AplicacaoCreate mensagem)
                     {
-                        await CriaAplicacaoAsync(mensagem, cancellationToken).ConfigureAwait(false);
+                        _ = CriaAplicacaoAsync(mensagem, cancellationToken);
                     }
                 }
                 catch (ConsumeException e)
