@@ -65,16 +65,15 @@ namespace Jenner.Aplicacao.API.Services
                         _logger.LogDebug("Carteira persistida com o ID {carteiraId} e Usuário {userCpf}", cart.Id, cart.Cpf);
                     }
                 });
-
-
-            string requestSource = _httpContextAccessor?.HttpContext?.Request.Host.Value
-                                   ?? throw new ArgumentNullException(nameof(_httpContextAccessor));
-
+                
+            //string requestSource = _httpContextAccessor?.HttpContext?.Request.Host.Value
+            //                       ?? throw new ArgumentNullException(nameof(_httpContextAccessor));
+            
             var cloudEvent = new CloudEvent
             {
                 Id = Guid.NewGuid().ToString(),
                 Type = Constants.CloudEvents.AplicadaType,
-                Source = new UriBuilder(requestSource).Uri,
+                Source = new UriBuilder("fromAplicacao").Uri,
                 Data = carteiraResult
             };
             

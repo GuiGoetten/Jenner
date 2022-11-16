@@ -52,7 +52,7 @@ namespace Jenner.Aplicacao.API.Services.Producer
             {
                 Id = Guid.NewGuid().ToString(),
                 Type = Constants.CloudEvents.AplicarType,
-                Source = new UriBuilder("fromAplicacaoAPI").Uri, //new UriBuilder($"From Agendador {DateTime.Now}").Uri,
+                Source = new UriBuilder("fromAplicacao").Uri, //new UriBuilder($"From Agendador {DateTime.Now}").Uri,
                 Data = aplicacaoCreate
             };
 
