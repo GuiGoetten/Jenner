@@ -66,15 +66,11 @@ namespace Jenner.Aplicacao.API.Services
                     }
                 });
 
-
-            string requestSource = _httpContextAccessor?.HttpContext?.Request.Host.Value
-                                   ?? throw new ArgumentNullException(nameof(_httpContextAccessor));
-
             var cloudEvent = new CloudEvent
             {
                 Id = Guid.NewGuid().ToString(),
                 Type = Constants.CloudEvents.AplicadaType,
-                Source = new UriBuilder(requestSource).Uri,
+                Source = new UriBuilder("fromAplicacaoAPI").Uri,
                 Data = carteiraResult
             };
             
