@@ -19,7 +19,7 @@ namespace Jenner.Aplicacao.API.Services.Consumer
         private readonly ILogger<AplicacaoWorker> _logger;
 
         public AplicacaoWorker(IServiceProvider serviceProvider, ISender sender, ILogger<AplicacaoWorker> logger) :
-            base(serviceProvider, new JsonEventFormatter<string>())
+            base(serviceProvider, new JsonEventFormatter<AplicacaoCreate>())
         {
             this.sender = sender ?? throw new ArgumentNullException(nameof(sender));
             this._logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -42,7 +42,7 @@ namespace Jenner.Aplicacao.API.Services.Consumer
                     var cloudEvent = result.Message.ToCloudEvent(cloudEventFormatter);
                     if (cloudEvent.Data is AplicacaoCreate mensagem)
                     {
-                        await CriaAplicacaoAsync(mensagem, cancellationToken).ConfigureAwait(false);
+                        _ = CriaAplicacaoAsync(mensagem, cancellationToken);
                     }
                 }
                 catch (ConsumeException e)

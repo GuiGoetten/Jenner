@@ -44,7 +44,7 @@ namespace Jenner.Carteira.API.Services.Consumer
 
                     if (cloudEvent.Data is Comum.Models.Carteira mensagem)
                     {
-                        await CriaCarteiraAsync(mensagem, cancellationToken).ConfigureAwait(false);
+                        _ = CriaCarteiraAsync(mensagem, cancellationToken);
                     }
                 }
                 catch (ConsumeException e)
